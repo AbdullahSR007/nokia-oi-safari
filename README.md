@@ -1,6 +1,9 @@
-# Nokia OI Safari
+# Nokia OI Safari Offline PWA
 
-Static GitHub Pages version of Nokia Operations Intelligence Safari.
+Static GitHub Pages version.
 
-No company DB is stored in this repository.
-The page runs in Safari and reads files selected locally by the user.
+Important:
+- This repository stores the app only.
+- It does not store CM/HW dump files.
+- User selects CM/HW files locally from Safari.
+- After first successful online open and Add to Home Screen, the app shell can open offline from iPhone.

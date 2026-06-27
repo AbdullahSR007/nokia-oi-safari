@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nokia OI">
-<title>Nokia OI Safari Fast v1.0.5</title>
+<title>Nokia OI Safari Offline PWA v1.0.7</title>
 <style>
 :root{
   --bg:#020817;--sf:#0f172a;--sf2:#1e293b;--bd:#334155;
@@ -218,7 +218,16 @@ html,body{height:100%;background:var(--bg);color:var(--t);font-family:-apple-sys
 .result-card,.source-card,.query-card{box-shadow:0 6px 16px rgba(0,0,0,.12)}
 .import-zone{background:linear-gradient(180deg,#0f172a,#0b1220)}
 
+
+/* v1.0.7 offline PWA status */
+.offline-pill{position:fixed;right:10px;bottom:calc(var(--sb) + 74px);z-index:90;background:#0f172a;border:1px solid #334155;color:#94a3b8;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.4px}
+.offline-pill.ok{border-color:#22c55e;color:#22c55e}
+.offline-pill.warn{border-color:#f59e0b;color:#f59e0b}
+
 </style>
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#020817">
+<link rel="apple-touch-icon" href="./icon-192.png">
 </head>
 <body>
 <div id="root">
@@ -2015,12 +2024,41 @@ function showLocalFileWarningIfNeeded(){
   }catch(e){}
 }
 
+
+// ───────────────────────────────────────────────────────────
+// OFFLINE PWA SERVICE WORKER REGISTRATION — v1.0.7
+// ───────────────────────────────────────────────────────────
+function addOfflinePill(text,cls){
+  try{
+    let el=document.getElementById('offlinePill');
+    if(!el){el=document.createElement('div');el.id='offlinePill';document.body.appendChild(el);}
+    el.className='offline-pill '+(cls||'');
+    el.textContent=text;
+  }catch(e){}
+}
+async function registerOfflinePWA(){
+  try{
+    if(!('serviceWorker' in navigator)){
+      addOfflinePill('Offline cache unsupported','warn');
+      return;
+    }
+    const reg=await navigator.serviceWorker.register('./sw.js?v=107');
+    addOfflinePill(navigator.onLine?'Offline cache ready':'Offline mode','ok');
+    if(reg && reg.update) reg.update().catch(()=>{});
+    window.addEventListener('online',()=>addOfflinePill('Online + cached','ok'));
+    window.addEventListener('offline',()=>addOfflinePill('Offline mode','ok'));
+  }catch(e){
+    addOfflinePill('Open via HTTPS for offline cache','warn');
+  }
+}
+
 // ───────────────────────────────────────────────────────────
 // INIT
 // ───────────────────────────────────────────────────────────
 restore();
 render();
 showLocalFileWarningIfNeeded();
+registerOfflinePWA();
 
 // Show "add to home screen" hint on first launch
 if(!localStorage.getItem('noi_launched')){
