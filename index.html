@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nokia OI">
-<title>Nokia OI Safari Offline PWA v1.0.7</title>
+<title>Nokia OI Safari Offline PWA v1.0.8</title>
 <style>
 :root{
   --bg:#020817;--sf:#0f172a;--sf2:#1e293b;--bd:#334155;
@@ -219,10 +219,17 @@ html,body{height:100%;background:var(--bg);color:var(--t);font-family:-apple-sys
 .import-zone{background:linear-gradient(180deg,#0f172a,#0b1220)}
 
 
-/* v1.0.7 offline PWA status */
+/* v1.0.8 offline PWA status */
 .offline-pill{position:fixed;right:10px;bottom:calc(var(--sb) + 74px);z-index:90;background:#0f172a;border:1px solid #334155;color:#94a3b8;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.4px}
 .offline-pill.ok{border-color:#22c55e;color:#22c55e}
 .offline-pill.warn{border-color:#f59e0b;color:#f59e0b}
+
+
+/* v1.0.8 AI offline + ChatGPT connect chips */
+.ai-chip-row{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.ai-chip-row::-webkit-scrollbar{display:none}
+.ai-chip{background:#0b1220;border:1px solid var(--bd);border-radius:999px;color:var(--t2);font-size:10px;font-weight:800;padding:6px 9px;white-space:nowrap;cursor:pointer}
+.ai-chip:active{opacity:.7}.ai-mode-note{font-size:11px;color:var(--t2);line-height:1.45;margin-top:6px}.ai-mode-note b{color:#22c55e}.ai-action-btn{background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--t);font-size:11px;font-weight:800;padding:7px 9px;white-space:nowrap;cursor:pointer}
+.ai-action-btn.green{border-color:#16a34a;color:#22c55e}.ai-action-btn.blue{border-color:#2563eb;color:#60a5fa}.ai-action-btn.purple{border-color:#7c3aed;color:#c084fc}
 
 </style>
 <link rel="manifest" href="./manifest.webmanifest">
@@ -257,54 +264,516 @@ html,body{height:100%;background:var(--bg);color:var(--t);font-family:-apple-sys
 'use strict';
 
 // ───────────────────────────────────────────────────────────
-// BSC REFERENCE CATALOG (39 records)
+// EMBEDDED BSC O&M REFERENCE — supplied by Abu Mohammed, version 2026-06-26
 // ───────────────────────────────────────────────────────────
 const BSC_CATALOG = [
-  // Makkah (12)
-  {name:'MKK_BSC01',om:'10.60.1.1', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-N'},
-  {name:'MKK_BSC02',om:'10.60.1.2', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-N'},
-  {name:'MKK_BSC03',om:'10.60.1.3', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-C'},
-  {name:'MKK_BSC04',om:'10.60.1.4', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-C'},
-  {name:'MKK_BSC05',om:'10.60.1.5', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-S'},
-  {name:'MKK_BSC06',om:'10.60.1.6', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-S'},
-  {name:'MKK_BSC07',om:'10.60.2.1', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-E'},
-  {name:'MKK_BSC08',om:'10.60.2.2', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-E'},
-  {name:'MKK_BSC09',om:'10.60.2.3', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-W'},
-  {name:'MKK_BSC10',om:'10.60.2.4', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-W'},
-  {name:'MKK_BSC11',om:'10.60.3.1', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-M'},
-  {name:'MKK_BSC12',om:'10.60.3.2', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-M'},
-  // Madinah (9)
-  {name:'MAD_BSC01',om:'10.61.1.1', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-N'},
-  {name:'MAD_BSC02',om:'10.61.1.2', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-N'},
-  {name:'MAD_BSC03',om:'10.61.1.3', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-C'},
-  {name:'MAD_BSC04',om:'10.61.1.4', type:'BSC G12',city:'Madinah', region:'West', cluster:'MAD-C'},
-  {name:'MAD_BSC05',om:'10.61.1.5', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-S'},
-  {name:'MAD_BSC06',om:'10.61.2.1', type:'BSC G12',city:'Madinah', region:'West', cluster:'MAD-S'},
-  {name:'MAD_BSC07',om:'10.61.2.2', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-E'},
-  {name:'MAD_BSC08',om:'10.61.2.3', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-E'},
-  {name:'MAD_BSC09',om:'10.61.2.4', type:'BSC G12',city:'Madinah', region:'West', cluster:'MAD-W'},
-  // Taif (7)
-  {name:'TAF_BSC01',om:'10.62.1.1', type:'BSC G16',city:'Taif',    region:'West', cluster:'TAF-N'},
-  {name:'TAF_BSC02',om:'10.62.1.2', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-N'},
-  {name:'TAF_BSC03',om:'10.62.1.3', type:'BSC G16',city:'Taif',    region:'West', cluster:'TAF-C'},
-  {name:'TAF_BSC04',om:'10.62.1.4', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-C'},
-  {name:'TAF_BSC05',om:'10.62.2.1', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-S'},
-  {name:'TAF_BSC06',om:'10.62.2.2', type:'BSC G16',city:'Taif',    region:'West', cluster:'TAF-S'},
-  {name:'TAF_BSC07',om:'10.62.2.3', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-E'},
-  // Abha (5)
-  {name:'ABH_BSC01',om:'10.63.1.1', type:'BSC G16',city:'Abha',    region:'South',cluster:'ABH-N'},
-  {name:'ABH_BSC02',om:'10.63.1.2', type:'BSC G12',city:'Abha',    region:'South',cluster:'ABH-C'},
-  {name:'ABH_BSC03',om:'10.63.1.3', type:'BSC G16',city:'Abha',    region:'South',cluster:'ABH-C'},
-  {name:'ABH_BSC04',om:'10.63.1.4', type:'BSC G12',city:'Abha',    region:'South',cluster:'ABH-S'},
-  {name:'ABH_BSC05',om:'10.63.1.5', type:'BSC G16',city:'Abha',    region:'South',cluster:'ABH-S'},
-  // Baha (4)
-  {name:'BAH_BSC01',om:'10.64.1.1', type:'BSC G16',city:'Baha',    region:'South',cluster:'BAH-C'},
-  {name:'BAH_BSC02',om:'10.64.1.2', type:'BSC G12',city:'Baha',    region:'South',cluster:'BAH-C'},
-  {name:'BAH_BSC03',om:'10.64.1.3', type:'BSC G12',city:'Baha',    region:'South',cluster:'BAH-S'},
-  {name:'BAH_BSC04',om:'10.64.1.4', type:'BSC G16',city:'Baha',    region:'South',cluster:'BAH-S'},
-  // Khamis Mushait (2)
-  {name:'KHM_BSC01',om:'10.65.1.1', type:'BSC G16',city:'Khamis Mushait',region:'South',cluster:'KHM-C'},
-  {name:'KHM_BSC02',om:'10.65.1.2', type:'BSC G16',city:'Khamis Mushait',region:'South',cluster:'KHM-C'},
+  {
+    "name": "KN2GB01",
+    "node": "KN2GB01",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.68",
+    "omIp": "10.68.1.68",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB02",
+    "node": "KN2GB02",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.76",
+    "omIp": "10.68.1.76",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB03",
+    "node": "KN2GB03",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.84",
+    "omIp": "10.68.1.84",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB04",
+    "node": "KN2GB04",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.92",
+    "omIp": "10.68.1.92",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB17",
+    "node": "KN2GB17",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.148",
+    "omIp": "10.68.0.148",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB18",
+    "node": "KN2GB18",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.156",
+    "omIp": "10.68.0.156",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB09",
+    "node": "KN2GB09",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.101.252",
+    "omIp": "10.74.101.252",
+    "exchangeId": "222",
+    "city": "Makkah",
+    "location": "Biban 222",
+    "cluster": "Biban 222",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB05",
+    "node": "KN2GB05",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.101.212",
+    "omIp": "10.74.101.212",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB13",
+    "node": "KN2GB13",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.101.220",
+    "omIp": "10.74.101.220",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB14",
+    "node": "KN2GB14",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.101.228",
+    "omIp": "10.74.101.228",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB16",
+    "node": "KN2GB16",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.101.236",
+    "omIp": "10.74.101.236",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB19",
+    "node": "KN2GB19",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.164",
+    "omIp": "10.68.0.164",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB20",
+    "node": "KN2GB20",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.188",
+    "omIp": "10.68.0.188",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB21",
+    "node": "KN2GB21",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.244",
+    "omIp": "10.68.0.244",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "GSK9B11",
+    "node": "GSK9B11",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.101.244",
+    "omIp": "10.74.101.244",
+    "exchangeId": "223",
+    "city": "Makkah",
+    "location": "Aziziya 223",
+    "cluster": "Aziziya 223",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB06",
+    "node": "KN2GB06",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.132",
+    "omIp": "10.74.102.132",
+    "exchangeId": "224",
+    "city": "Makkah",
+    "location": "Mansour 224",
+    "cluster": "Mansour 224",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB07",
+    "node": "KN2GB07",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.140",
+    "omIp": "10.74.102.140",
+    "exchangeId": "224",
+    "city": "Makkah",
+    "location": "Mansour 224",
+    "cluster": "Mansour 224",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB08",
+    "node": "KN2GB08",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.148",
+    "omIp": "10.74.102.148",
+    "exchangeId": "224",
+    "city": "Makkah",
+    "location": "Mansour 224",
+    "cluster": "Mansour 224",
+    "region": "West"
+  },
+  {
+    "name": "KN2GB15",
+    "node": "KN2GB15",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.156",
+    "omIp": "10.74.102.156",
+    "exchangeId": "224",
+    "city": "Makkah",
+    "location": "Mansour 224",
+    "cluster": "Mansour 224",
+    "region": "West"
+  },
+  {
+    "name": "GSK1B8",
+    "node": "GSK1B8",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.164",
+    "omIp": "10.74.102.164",
+    "exchangeId": "224",
+    "city": "Makkah",
+    "location": "Mansour 224",
+    "cluster": "Mansour 224",
+    "region": "West"
+  },
+  {
+    "name": "TN2GB02",
+    "node": "TN2GB02",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.76",
+    "omIp": "10.68.0.76",
+    "exchangeId": "231",
+    "city": "Taif",
+    "location": "Markzi 231",
+    "cluster": "Markzi 231",
+    "region": "West"
+  },
+  {
+    "name": "TN2GB04",
+    "node": "TN2GB04",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.92",
+    "omIp": "10.68.0.92",
+    "exchangeId": "231",
+    "city": "Taif",
+    "location": "Markzi 231",
+    "cluster": "Markzi 231",
+    "region": "West"
+  },
+  {
+    "name": "TN2GB01",
+    "node": "TN2GB01",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.68",
+    "omIp": "10.68.0.68",
+    "exchangeId": "231",
+    "city": "Taif",
+    "location": "Markzi 231",
+    "cluster": "Markzi 231",
+    "region": "West"
+  },
+  {
+    "name": "TN2GB03",
+    "node": "TN2GB03",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.84",
+    "omIp": "10.68.0.84",
+    "exchangeId": "231",
+    "city": "Taif",
+    "location": "Markzi 231",
+    "cluster": "Markzi 231",
+    "region": "West"
+  },
+  {
+    "name": "GSM5B11",
+    "node": "GSM5B11",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.108",
+    "omIp": "10.74.102.108",
+    "exchangeId": "401",
+    "city": "Madinah",
+    "location": "Balad 401",
+    "cluster": "Balad 401",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB01",
+    "node": "MN2GB01",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.4",
+    "omIp": "10.68.1.4",
+    "exchangeId": "401",
+    "city": "Madinah",
+    "location": "Balad 401",
+    "cluster": "Balad 401",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB02",
+    "node": "MN2GB02",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.12",
+    "omIp": "10.68.1.12",
+    "exchangeId": "401",
+    "city": "Madinah",
+    "location": "Balad 401",
+    "cluster": "Balad 401",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB03",
+    "node": "MN2GB03",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.20",
+    "omIp": "10.68.1.20",
+    "exchangeId": "401",
+    "city": "Madinah",
+    "location": "Balad 401",
+    "cluster": "Balad 401",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB04",
+    "node": "MN2GB04",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.28",
+    "omIp": "10.68.1.28",
+    "exchangeId": "401",
+    "city": "Madinah",
+    "location": "Balad 401",
+    "cluster": "Balad 401",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB05",
+    "node": "MN2GB05",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.132",
+    "omIp": "10.68.1.132",
+    "exchangeId": "402",
+    "city": "Madinah",
+    "location": "Hara 402",
+    "cluster": "Hara 402",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB06",
+    "node": "MN2GB06",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.140",
+    "omIp": "10.68.1.140",
+    "exchangeId": "402",
+    "city": "Madinah",
+    "location": "Hara 402",
+    "cluster": "Hara 402",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB08",
+    "node": "MN2GB08",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.1.124",
+    "omIp": "10.68.1.124",
+    "exchangeId": "402",
+    "city": "Madinah",
+    "location": "Hara 402",
+    "cluster": "Hara 402",
+    "region": "West"
+  },
+  {
+    "name": "MN2GB09",
+    "node": "MN2GB09",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.99.20",
+    "omIp": "10.74.99.20",
+    "exchangeId": "402",
+    "city": "Madinah",
+    "location": "Hara 402",
+    "cluster": "Hara 402",
+    "region": "West"
+  },
+  {
+    "name": "AN2GB02",
+    "node": "AN2GB02",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.124",
+    "omIp": "10.74.102.124",
+    "exchangeId": "701",
+    "city": "Abha",
+    "location": "Abha 701",
+    "cluster": "Abha 701",
+    "region": "South"
+  },
+  {
+    "name": "AN2GB01",
+    "node": "AN2GB01",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.102.116",
+    "omIp": "10.74.102.116",
+    "exchangeId": "701",
+    "city": "Abha",
+    "location": "Abha 701",
+    "cluster": "Abha 701",
+    "region": "South"
+  },
+  {
+    "name": "AN2GB03",
+    "node": "AN2GB03",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.140.106.68",
+    "omIp": "10.140.106.68",
+    "exchangeId": "712",
+    "city": "Baha",
+    "location": "Baha 712",
+    "cluster": "Baha 712",
+    "region": "South"
+  },
+  {
+    "name": "AN2GB11",
+    "node": "AN2GB11",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.74.99.100",
+    "omIp": "10.74.99.100",
+    "exchangeId": "712",
+    "city": "Baha",
+    "location": "Baha 712",
+    "cluster": "Baha 712",
+    "region": "South"
+  },
+  {
+    "name": "AN2GB04",
+    "node": "AN2GB04",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.132",
+    "omIp": "10.68.0.132",
+    "exchangeId": "702",
+    "city": "Khamis",
+    "location": "Khamis 702",
+    "cluster": "Khamis 702",
+    "region": "South"
+  },
+  {
+    "name": "AN2GB06",
+    "node": "AN2GB06",
+    "type": "BSC",
+    "nodeType": "BSC",
+    "om": "10.68.0.140",
+    "omIp": "10.68.0.140",
+    "exchangeId": "702",
+    "city": "Khamis",
+    "location": "Khamis 702",
+    "cluster": "Khamis 702",
+    "region": "South"
+  }
 ];
 
 // ───────────────────────────────────────────────────────────
@@ -1509,7 +1978,7 @@ function renderAnalyzeTab(){
     </div>`).join('')}
     ${noSrc?`
     <div class="query-card" style="opacity:.4;cursor:default">
-      <div class="query-num">Q01–Q20</div>
+      <div class="query-num">Q01–Q60</div>
       <div class="query-title">60 Intelligence Questions</div>
       <div class="query-desc">Import Nokia RAN CM/HW dumps to unlock dashboard, search, and AI cards</div>
     </div>`:''}
@@ -1522,12 +1991,12 @@ function renderBscTab(){
   return `
 <div class="content">
 <div class="bsc-wrap">
-  <div class="section-title">BSC Reference Catalog (${BSC_CATALOG.length})</div>
+  <div class="section-title">Embedded BSC O&M Reference (${BSC_CATALOG.length})</div>
   <div class="bsc-search">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
     </svg>
-    <input id="bscSearch" placeholder="Search BSC name, city, cluster, IP…" oninput="renderBscTable(this.value)">
+    <input id="bscSearch" placeholder="Search node, O&M IP, exchange, city, location…" oninput="renderBscTable(this.value)">
   </div>
   <div class="bsc-table-wrap" id="bscTableWrap">
     ${renderBscTableHtml('')}
@@ -1537,26 +2006,27 @@ function renderBscTab(){
 }
 
 function renderBscTableHtml(q){
-  const city_colors={'Makkah':'#1e3a5f','Madinah':'#052e16','Taif':'#2d1b69','Abha':'#3b1515','Baha':'#1a1f15','Khamis Mushait':'#15231a'};
+  const city_colors={'Makkah':'#1e3a5f','Madinah':'#052e16','Taif':'#2d1b69','Abha':'#3b1515','Baha':'#1a1f15','Khamis':'#15231a','Khamis Mushait':'#15231a'};
   const rows=BSC_CATALOG.filter(b=>{
     if(!q) return true;
-    const s=(b.name+b.om+b.type+b.city+b.cluster).toLowerCase();
-    return q.toLowerCase().split(/\s+/).every(t=>s.includes(t));
+    const s=(b.name+' '+b.om+' '+b.type+' '+b.exchangeId+' '+b.city+' '+b.location).toLowerCase();
+    return q.toLowerCase().split(/\s+/).filter(Boolean).every(t=>s.includes(t));
   });
   return `
 <table class="bsc-table">
   <thead><tr>
-    <th>BSC Name</th><th>O&M IP</th><th>Type</th><th>City</th><th>Cluster</th>
+    <th>Node</th><th>Node Type</th><th>O&M IP</th><th>Exchange ID</th><th>City</th><th>Location</th>
   </tr></thead>
   <tbody>
     ${rows.map(b=>`<tr onclick="openBscDetail(${JSON.stringify(JSON.stringify(b))})">
       <td>${b.name}</td>
-      <td>${b.om}</td>
       <td>${b.type}</td>
+      <td>${b.om}</td>
+      <td>${b.exchangeId}</td>
       <td><span class="bsc-city-badge" style="background:${city_colors[b.city]||'#1a1a2e'};color:var(--t)">${b.city}</span></td>
-      <td>${b.cluster}</td>
+      <td>${b.location}</td>
     </tr>`).join('')}
-    ${!rows.length?'<tr><td colspan="5" style="color:var(--t3);text-align:center;padding:20px">No matching BSC records</td></tr>':''}
+    ${!rows.length?'<tr><td colspan="6" style="color:var(--t3);text-align:center;padding:20px">No matching BSC records</td></tr>':''}
   </tbody>
 </table>`;
 }
@@ -1571,19 +2041,37 @@ function renderAiTab(){
   <div class="ai-bubble ${m.role}">${m.role==='assistant'?formatAiContent(m.content):escHtml(m.content)}</div>
 </div>`).join('');
 
+  const examples=[
+    'Show BSC O&M IPs for Makkah',
+    'What is KN2GB01 O&M IP?',
+    'List BSCs in exchange 222',
+    'What are ZMM100 hardware unit types?',
+    'Site 360 for ZMM100',
+    'Show software versions',
+    'Show all Quick AI questions'
+  ];
+
   return `
 <div class="ai-wrap">
   <div class="ai-config">
-    <div class="ai-config-row">
-      <span class="ai-label">API Key</span>
-      <input class="ai-input" type="password" placeholder="sk-ant-… or sk-…"
-        value="${escHtml(S.apiKey)}" oninput="S.apiKey=this.value;persist()">
+    <div class="ai-mode-note"><b>Offline AI is active by default.</b> It answers from loaded local CM/HW data and embedded BSC reference. No API key is required.</div>
+    <div class="ai-chip-row">
+      ${examples.map(x=>`<button class="ai-chip" onclick="setAiExample(${JSON.stringify(x)})">${escHtml(x)}</button>`).join('')}
+    </div>
+    <div class="ai-config-row" style="margin-top:8px">
+      <button class="ai-action-btn green" onclick="copyChatGptContext()">Copy ChatGPT Context</button>
+      <button class="ai-action-btn blue" onclick="openChatGpt()">Open ChatGPT</button>
+      <button class="ai-action-btn purple" onclick="clearChat()">Clear</button>
     </div>
     <div class="ai-config-row">
-      <span class="ai-label">Endpoint</span>
-      <input class="ai-input" type="url" placeholder="Custom endpoint (optional)"
+      <span class="ai-label">Backend</span>
+      <input class="ai-input" type="url" placeholder="Optional private HTTPS backend for ChatGPT + local DB"
         value="${escHtml(S.hybridUrl)}" oninput="S.hybridUrl=this.value;persist()">
-      <button class="btn btn-secondary" style="padding:6px 10px;font-size:11px" onclick="clearChat()">Clear</button>
+    </div>
+    <div class="ai-config-row">
+      <span class="ai-label">Token</span>
+      <input class="ai-input" type="password" placeholder="Optional backend token / API key"
+        value="${escHtml(S.apiKey)}" oninput="S.apiKey=this.value;persist()">
     </div>
   </div>
   <div class="ai-messages" id="aiMessages">
@@ -1591,12 +2079,12 @@ function renderAiTab(){
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;margin-bottom:10px">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
-      <h3>AI Assistant</h3>
-      <p>Ask questions about your loaded data, network topology, or Nokia RAN configuration. Enter your Anthropic or OpenAI API key above.</p>
+      <h3>Offline AI + ChatGPT Connect</h3>
+      <p>Ask about BSC O&M IPs, sites, HW unit types, software versions, Quick AI questions, or loaded CM/HW data. Use Copy ChatGPT Context when you want to paste controlled local evidence into ChatGPT.</p>
       </div>`:msgs}
   </div>
   <div class="ai-input-row">
-    <textarea class="ai-text-input" id="aiInput" placeholder="Ask about your network data…" rows="1"
+    <textarea class="ai-text-input" id="aiInput" placeholder="Ask offline AI about your Nokia data…" rows="1"
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiMessage()}"
       oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
     <button class="ai-send-btn" id="aiSendBtn" onclick="sendAiMessage()">
@@ -1761,15 +2249,16 @@ function searchByField(row){
 function openBscDetail(jsonStr){
   const b=JSON.parse(jsonStr);
   const body=`
-<div class="modal-row"><span class="modal-row-label">BSC Name</span><span class="modal-row-val">${escHtml(b.name)}</span></div>
+<div class="modal-row"><span class="modal-row-label">Node</span><span class="modal-row-val">${escHtml(b.name)}</span></div>
+<div class="modal-row"><span class="modal-row-label">Node Type</span><span class="modal-row-val">${escHtml(b.type)}</span></div>
 <div class="modal-row"><span class="modal-row-label">O&M IP</span><span class="modal-row-val">${escHtml(b.om)}</span></div>
-<div class="modal-row"><span class="modal-row-label">Type</span><span class="modal-row-val">${escHtml(b.type)}</span></div>
+<div class="modal-row"><span class="modal-row-label">Exchange ID</span><span class="modal-row-val">${escHtml(b.exchangeId)}</span></div>
 <div class="modal-row"><span class="modal-row-label">City</span><span class="modal-row-val">${escHtml(b.city)}</span></div>
-<div class="modal-row"><span class="modal-row-label">Region</span><span class="modal-row-val">${escHtml(b.region)}</span></div>
-<div class="modal-row"><span class="modal-row-label">Cluster</span><span class="modal-row-val">${escHtml(b.cluster)}</span></div>`;
+<div class="modal-row"><span class="modal-row-label">Location</span><span class="modal-row-val">${escHtml(b.location)}</span></div>`;
+  const copy=`${b.name}\nNode Type: ${b.type}\nO&M IP: ${b.om}\nExchange ID: ${b.exchangeId}\nCity: ${b.city}\nLocation: ${b.location}`;
   const footer=`
 <button class="btn btn-secondary" onclick="quickSearch(${JSON.stringify(b.name)});closeModal();switchTab('search')">🔍 Search Data</button>
-<button class="btn btn-secondary" onclick="copyText('${b.name}\\nO&M: ${b.om}\\nType: ${b.type}\\nCity: ${b.city}\\nCluster: ${b.cluster}')">Copy</button>
+<button class="btn btn-secondary" onclick="copyText(${JSON.stringify(copy)})">Copy</button>
 <button class="btn btn-primary" onclick="closeModal()">Done</button>`;
   openModal(b.name,body,footer);
 }
@@ -1921,6 +2410,144 @@ function renderResultTable(rows){
   </table></div>`;
 }
 
+
+function setAiExample(q){
+  const inp=document.getElementById('aiInput');
+  if(inp){inp.value=q;inp.focus();inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,100)+'px';}
+}
+function openChatGpt(){
+  try{window.open('https://chatgpt.com/','_blank');}catch(e){showToast('Open chatgpt.com manually');}
+}
+function normalizeAiText(s){return String(s||'').toUpperCase().replace(/[^A-Z0-9. ]/g,' ');}
+function findBscInText(text){
+  const t=normalizeAiText(text).replace(/\s+/g,'');
+  return BSC_CATALOG.find(b=>t.includes(String(b.name).toUpperCase()))||null;
+}
+function findSiteToken(text){
+  const t=String(text||'').toUpperCase();
+  const b=findBscInText(text); if(b) return b.name;
+  const m=t.match(/\b[A-Z]{2,5}\d[A-Z0-9]{2,8}\b/);
+  return m?m[0]:'';
+}
+function rowsMatchingSite(site){
+  if(!site) return [];
+  const key=normSite(site);
+  const out=[];
+  for(const s of S.sources){
+    const siteCols=s.headers.filter(h=>/^(site|node|bts|bts_name|btsname|cellname|cell_name)$/i.test(h) || /site|node|bts|cell/i.test(h));
+    for(const r of s.rows){
+      const ok=siteCols.some(c=>normSite(cv(r,c)).includes(key) || key.includes(normSite(cv(r,c))));
+      if(ok) out.push({_source:s.name,_tech:s.tech,_headers:s.headers,...r});
+    }
+  }
+  return out;
+}
+function findBestCol(headers, aliases){return findCol(headers, aliases)||'';}
+function rowsToCountTable(rows, col){
+  const map={};
+  for(const r of rows){const v=(r[col]||'').toString().trim()||'(blank)'; map[v]=(map[v]||0)+1;}
+  return Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([Value,Count])=>({Value,Count}));
+}
+function bscTableText(rows){
+  return rows.map(b=>`${b.name} | ${b.type} | ${b.om} | Exchange ${b.exchangeId} | ${b.city} | ${b.location}`).join('\n');
+}
+function localBscAnswer(q){
+  const b=findBscInText(q);
+  if(b) return `EMBEDDED BSC O&M REFERENCE\n\n${b.name}\nNode Type: ${b.type}\nO&M IP: ${b.om}\nExchange ID: ${b.exchangeId}\nCity: ${b.city}\nLocation: ${b.location}\n\nSource: embedded BSC reference supplied by Abu Mohammed.`;
+  const t=String(q||'').toLowerCase();
+  let rows=BSC_CATALOG;
+  const ex=t.match(/exchange\s*(id)?\s*(\d{3})|\b(\d{3})\b/);
+  if(ex){const id=ex[2]||ex[3]; rows=rows.filter(b=>b.exchangeId===id);}
+  for(const city of ['makkah','madinah','taif','abha','baha','khamis']){
+    if(t.includes(city)) rows=rows.filter(b=>b.city.toLowerCase().includes(city));
+  }
+  if(t.includes('bsc')||t.includes('o&m')||t.includes('om ip')||t.includes('exchange')||t.includes('location')){
+    return `EMBEDDED BSC O&M REFERENCE — ${rows.length} record(s)\n\n${bscTableText(rows.slice(0,80))}`;
+  }
+  return '';
+}
+function localHwAnswer(q){
+  const site=findSiteToken(q);
+  const hwSources=S.sources.filter(s=>s.tech==='HW' || /hw|hardware|unit|serial/i.test(s.name+' '+s.headers.join(' ')));
+  if(!hwSources.length) return 'No HW dump is loaded yet. Import HW ZIP/CSV, then ask again.';
+  let rows=[];
+  if(site) rows=rowsMatchingSite(site).filter(r=>String(r._tech).toUpperCase()==='HW' || /HW|Hardware/i.test(r._source||''));
+  else for(const s of hwSources) rows.push(...s.rows.map(r=>({_source:s.name,_tech:s.tech,_headers:s.headers,...r})));
+  if(!rows.length) return `No HW rows found for ${site}. Check site spelling or import full HW dump.`;
+  const headers=rows[0]._headers||Object.keys(rows[0]);
+  const unitCol=findBestCol(headers,['UNIT_TYPE','unittype','unit_type','hwtype','productname','type']);
+  if(!unitCol) return 'HW rows found, but no UNIT_TYPE / hardware type column was detected.';
+  const table=rowsToCountTable(rows,unitCol).slice(0,80).map(x=>({Unit_Type:x.Value,Count:x.Count}));
+  return `OFFLINE AI — HW UNIT TYPES${site?' for '+site:''}\nRows used: ${rows.length.toLocaleString()}\nColumn: ${unitCol}\n\n${tableToText(table)}`;
+}
+function localSite360Answer(q){
+  const site=findSiteToken(q);
+  if(!site) return '';
+  const rows=rowsMatchingSite(site);
+  if(!rows.length) return `No local CM/HW rows found for ${site}. Try importing data or check the site name.`;
+  const bySrc={}; const byTech={};
+  for(const r of rows){bySrc[r._source]=(bySrc[r._source]||0)+1; byTech[r._tech]=(byTech[r._tech]||0)+1;}
+  const bsc=findBscInText(site)||findBscInText(q);
+  let out=`SITE 360 — ${site}\n\nRows found: ${rows.length.toLocaleString()}\nBy technology/source type:\n${Object.entries(byTech).map(([k,v])=>`- ${k}: ${v}`).join('\n')}\n\nBy source:\n${Object.entries(bySrc).map(([k,v])=>`- ${k}: ${v}`).join('\n')}`;
+  if(bsc) out += `\n\nEmbedded BSC reference:\n${bscTableText([bsc])}`;
+  out += `\n\nSample evidence:\n${rows.slice(0,8).map(r=>Object.entries(r).filter(([k,v])=>!k.startsWith('_')&&v).slice(0,8).map(([k,v])=>`${k}=${v}`).join(' | ')).join('\n')}`;
+  return out;
+}
+function sourceStructureAnswer(){
+  if(!S.sources.length) return 'No data loaded yet. Import CM/HW files first.';
+  return `LOCAL DB STRUCTURE\n\n${S.sources.map(s=>`- ${s.name}: ${s.rows.length.toLocaleString()} rows, tech=${s.tech}, columns=${s.headers.length}\n  ${s.headers.slice(0,30).join(', ')}${s.headers.length>30?', ...':''}`).join('\n')}`;
+}
+function quickQuestionsAnswer(){
+  return 'QUICK AI QUESTIONS Q01–Q60\n\n' + QUERIES.map((q,i)=>`Q${String(i+1).padStart(2,'0')} — ${q.title}`).join('\n');
+}
+function runQueryByIntent(q){
+  const t=q.toLowerCase();
+  let qdef=null;
+  const qnum=t.match(/\bq\s*([0-9]{1,2})\b/i);
+  if(qnum) qdef=QUERIES[parseInt(qnum[1],10)-1];
+  else if(t.includes('software')||t.includes('sw version')) qdef=QUERIES.find(x=>x.id==='q11');
+  else if(t.includes('combined')||t.includes('2g+4g+5g')) qdef=QUERIES.find(x=>x.id==='q18');
+  else if(t.includes('duplicate')&&t.includes('ip')) qdef=QUERIES.find(x=>x.id==='q08');
+  else if(t.includes('5g')&&t.includes('4g')&&t.includes('missing')) qdef=QUERIES.find(x=>x.id==='q06');
+  if(!qdef) return '';
+  try{
+    const res=qdef.fn();
+    if(Array.isArray(res)) return `OFFLINE AI — ${qdef.title}\n\n${tableToText(res.slice(0,120))}`;
+    if(res && res.summary!==undefined) return `OFFLINE AI — ${qdef.title}\n\n${res.summary}\n\n${tableToText((res.rows||[]).slice(0,120))}`;
+    return `OFFLINE AI — ${qdef.title}\n\n${JSON.stringify(res,null,2)}`;
+  }catch(e){return `Question ${qdef.title} could not run: ${e.message}`;}
+}
+function offlineAiAnswer(q){
+  const t=String(q||'').toLowerCase();
+  if(t.includes('60') || t.includes('quick ai') || t.includes('questions')) return quickQuestionsAnswer();
+  if(t.includes('structure')||t.includes('columns')||t.includes('headers')||t.includes('loaded data')) return sourceStructureAnswer();
+  const bsc=localBscAnswer(q); if(bsc) return bsc;
+  if(t.includes('hardware')||t.includes('hw')||t.includes('unit type')||t.includes('serial')) return localHwAnswer(q);
+  if(t.includes('site 360')||findSiteToken(q)) {
+    const ans=localSite360Answer(q); if(ans) return ans;
+  }
+  const qi=runQueryByIntent(q); if(qi) return qi;
+  if(S.sources.length){
+    const oldQ=S.query;
+    S.query=q; runSearch(q);
+    const hits=S.results.slice(0,20);
+    S.query=oldQ;
+    if(hits.length) return `OFFLINE AI SEARCH RESULT\nFound ${hits.length} top matching row(s) for: ${q}\n\n${hits.map((r,i)=>`${i+1}. ${Object.entries(r).filter(([k,v])=>!k.startsWith('_')&&v).slice(0,8).map(([k,v])=>`${k}=${v}`).join(' | ')}`).join('\n')}`;
+  }
+  return 'Offline AI is ready. Ask about embedded BSC O&M IPs, a site name, HW unit types, software versions, or Quick AI Q01–Q60. Import CM/HW data for local database answers.';
+}
+function buildChatGptPrompt(question){
+  const q=question || (S.chatHistory.slice().reverse().find(m=>m.role==='user')||{}).content || '';
+  const local=offlineAiAnswer(q);
+  return `You are Nokia Operations Intelligence expert. Use the controlled local evidence below and answer clearly.\n\nUSER QUESTION:\n${q}\n\nLOCAL OFFLINE AI ANSWER / EVIDENCE:\n${local}\n\nLOADED SOURCES SUMMARY:\n${S.sources.length?S.sources.map(s=>`- ${s.name}: ${s.rows.length} rows, tech=${s.tech}, columns=[${s.headers.slice(0,20).join(', ')}]`).join('\n'):'No CM/HW files loaded in browser.'}\n\nEMBEDDED BSC REFERENCE SAMPLE:\n${bscTableText(BSC_CATALOG.slice(0,20))}\n\nPlease explain calculation, risks, and next checks. Do not invent values not supported by evidence.`;
+}
+function copyChatGptContext(){
+  const inp=document.getElementById('aiInput');
+  const q=(inp&&inp.value.trim()) || (S.chatHistory.slice().reverse().find(m=>m.role==='user')||{}).content || 'Summarize Nokia OI local evidence';
+  copyText(buildChatGptPrompt(q));
+  showToast('ChatGPT context copied');
+}
+
 // ───────────────────────────────────────────────────────────
 // AI CHAT
 // ───────────────────────────────────────────────────────────
@@ -1930,9 +2557,18 @@ async function sendAiMessage(){
   const inp=document.getElementById('aiInput');
   const msg=(inp.value||'').trim();
   if(!msg) return;
-  if(!S.apiKey){showToast('⚠️ Enter API key first');return;}
 
   S.chatHistory.push({role:'user',content:msg});
+  if(!S.apiKey && !S.hybridUrl){
+    const text=offlineAiAnswer(msg);
+    S.chatHistory.push({role:'assistant',content:text});
+    inp.value='';inp.style.height='auto';
+    render();
+    const msgs_el=document.getElementById('aiMessages');
+    if(msgs_el) msgs_el.scrollTop=msgs_el.scrollHeight;
+    return;
+  }
+
   inp.value='';inp.style.height='auto';
   document.getElementById('aiSendBtn').disabled=true;
   setSignal(true);
@@ -1942,7 +2578,7 @@ async function sendAiMessage(){
     `\n\nLoaded Nokia data sources:\n${S.sources.map(s=>`- ${s.name}: ${s.rows.length} rows, tech=${s.tech}, columns=[${s.headers.slice(0,15).join(', ')}]`).join('\n')}\n\nSample rows (first 3 of each source):\n${S.sources.map(s=>s.rows.slice(0,3).map(r=>JSON.stringify(r)).join('\n')).join('\n---\n')}`:
     '\n\nNo data loaded yet.';
 
-  const sysPrompt=`You are Nokia Operations Intelligence AI, an expert Nokia RAN (2G/4G/5G) network assistant. Analyze loaded CM dumps, HW dumps, and network data. Be concise and technical. Answer in the same language as the user's question.${dataCtx}`;
+  const sysPrompt=`You are Nokia Operations Intelligence AI, an expert Nokia RAN (2G/4G/5G) network assistant. Analyze controlled local evidence from the browser. Be concise and technical. Answer in the same language as the user's question.\n\nOffline deterministic answer/evidence for current question:\n${offlineAiAnswer(msg)}${dataCtx}`;
 
   const msgs=S.chatHistory.map(m=>({role:m.role,content:m.content}));
 
@@ -2026,7 +2662,7 @@ function showLocalFileWarningIfNeeded(){
 
 
 // ───────────────────────────────────────────────────────────
-// OFFLINE PWA SERVICE WORKER REGISTRATION — v1.0.7
+// OFFLINE PWA SERVICE WORKER REGISTRATION — v1.0.8
 // ───────────────────────────────────────────────────────────
 function addOfflinePill(text,cls){
   try{
@@ -2042,7 +2678,7 @@ async function registerOfflinePWA(){
       addOfflinePill('Offline cache unsupported','warn');
       return;
     }
-    const reg=await navigator.serviceWorker.register('./sw.js?v=107');
+    const reg=await navigator.serviceWorker.register('./sw.js?v=108');
     addOfflinePill(navigator.onLine?'Offline cache ready':'Offline mode','ok');
     if(reg && reg.update) reg.update().catch(()=>{});
     window.addEventListener('online',()=>addOfflinePill('Online + cached','ok'));
