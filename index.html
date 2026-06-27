@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nokia OI">
+<title>Nokia OI Safari Fast v1.0.5</title>
+<style>
+:root{
+  --bg:#020817;--sf:#0f172a;--sf2:#1e293b;--bd:#334155;
+  --p:#005aff;--cy:#06b6d4;--gr:#22c55e;--yl:#f59e0b;--rd:#ef4444;--pu:#a855f7;
+  --t:#f1f5f9;--t2:#94a3b8;--t3:#475569;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--t);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+#root{display:flex;flex-direction:column;height:100%;padding-top:var(--st)}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#020817 0%,#050f2a 100%);border-bottom:1px solid var(--bd);padding:10px 16px 8px;flex-shrink:0}
+.hdr-top{display:flex;align-items:center;gap:10px}
+.logo{width:32px;height:32px;background:var(--p);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;flex-shrink:0}
+.hdr-title{flex:1}
+.hdr-title h1{font-size:15px;font-weight:700;color:var(--t);letter-spacing:.3px}
+.hdr-title p{font-size:11px;color:var(--t3);margin-top:1px}
+.signal-bars{display:flex;align-items:flex-end;gap:2px;height:18px}
+.signal-bars span{width:4px;background:var(--p);border-radius:1px;opacity:.3;transition:height .3s,opacity .3s}
+.signal-bars span:nth-child(1){height:6px}
+.signal-bars span:nth-child(2){height:9px}
+.signal-bars span:nth-child(3){height:12px}
+.signal-bars span:nth-child(4){height:15px}
+.signal-bars span:nth-child(5){height:18px}
+.signal-bars.active span{opacity:1;animation:pulse-bar .6s ease-in-out infinite alternate}
+.signal-bars.active span:nth-child(1){animation-delay:0s}
+.signal-bars.active span:nth-child(2){animation-delay:.1s}
+.signal-bars.active span:nth-child(3){animation-delay:.2s}
+.signal-bars.active span:nth-child(4){animation-delay:.3s}
+.signal-bars.active span:nth-child(5){animation-delay:.4s}
+@keyframes pulse-bar{from{opacity:.4}to{opacity:1}}
+.src-strip{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;scrollbar-width:none}
+.src-strip::-webkit-scrollbar{display:none}
+.src-chip{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap;border:1px solid var(--bd);color:var(--t2);background:var(--sf)}
+.src-chip.active{border-color:var(--p);color:var(--p)}
+
+/* SEARCH BAR */
+.search-wrap{padding:10px 12px;background:var(--sf);border-bottom:1px solid var(--bd);flex-shrink:0}
+.search-row{display:flex;gap:8px;align-items:center}
+.search-input-wrap{flex:1;display:flex;align-items:center;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:0 10px;gap:8px}
+.search-input-wrap svg{flex-shrink:0;color:var(--t3)}
+.search-input{flex:1;background:none;border:none;outline:none;color:var(--t);font-size:15px;height:38px;caret-color:var(--p)}
+.search-input::placeholder{color:var(--t3)}
+.clear-btn{background:none;border:none;color:var(--t3);padding:4px;cursor:pointer;display:none}
+.search-input:not(:placeholder-shown) ~ .clear-btn{display:block}
+.icon-btn{background:var(--sf2);border:1px solid var(--bd);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--t2);flex-shrink:0;cursor:pointer}
+.icon-btn.active{border-color:var(--p);color:var(--p);background:#0d1e3d}
+.hist-chips{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;scrollbar-width:none}
+.hist-chips::-webkit-scrollbar{display:none}
+.hist-chip{padding:4px 10px;border-radius:16px;border:1px solid var(--bd);font-size:12px;color:var(--t2);background:none;white-space:nowrap;cursor:pointer;flex-shrink:0}
+.hist-chip:active{background:var(--sf2)}
+
+/* MAIN CONTENT */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+
+/* RESULT META */
+.result-meta{padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bd);flex-shrink:0}
+.result-count{font-size:12px;color:var(--t3)}
+.meta-btns{display:flex;gap:6px}
+.mini-btn{background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:4px 8px;font-size:11px;color:var(--t2);cursor:pointer;white-space:nowrap}
+.mini-btn:active{opacity:.7}
+
+/* RESULT CARDS */
+.results-list{padding:8px}
+.result-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;margin-bottom:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.result-card:active{border-color:var(--p)}
+.card-hdr{padding:10px 12px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-site{font-size:14px;font-weight:700;color:var(--t);word-break:break-all}
+.tech-badge{padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;flex-shrink:0;text-transform:uppercase}
+.tech-2g{background:#052e16;color:var(--gr);border:1px solid #16a34a}
+.tech-4g{background:#1e3a5f;color:#60a5fa;border:1px solid #2563eb}
+.tech-5g{background:#2d1b69;color:#c084fc;border:1px solid #7c3aed}
+.tech-hw{background:#1a1a2e;color:var(--cy);border:1px solid var(--cy)}
+.tech-un{background:var(--sf2);color:var(--t3);border:1px solid var(--bd)}
+.card-src{font-size:10px;color:var(--t3);padding:0 12px;margin-bottom:6px}
+.card-fields{padding:0 12px 10px;display:flex;flex-wrap:wrap;gap:4px}
+.card-kv{font-size:11px;color:var(--t2)}
+.card-kv span{color:var(--t3);margin-right:2px}
+.card-kv b{color:var(--t)}
+.empty-state{text-align:center;padding:60px 24px;color:var(--t3)}
+.empty-state svg{opacity:.3;margin-bottom:12px}
+.empty-state h3{font-size:15px;color:var(--t2);margin-bottom:6px}
+.empty-state p{font-size:13px;line-height:1.5}
+
+/* IMPORT TAB */
+.import-wrap{padding:16px}
+.import-zone{border:2px dashed var(--bd);border-radius:16px;padding:32px 16px;text-align:center;background:var(--sf);margin-bottom:16px}
+.import-zone svg{color:var(--t3);margin-bottom:12px}
+.import-zone p{font-size:13px;color:var(--t2);margin-bottom:12px;line-height:1.5}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:12px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:opacity .15s}
+.btn:active{opacity:.75}
+.btn-primary{background:var(--p);color:#fff}
+.btn-secondary{background:var(--sf2);color:var(--t);border:1px solid var(--bd)}
+.btn-danger{background:#450a0a;color:var(--rd);border:1px solid #991b1b}
+.file-input{display:none}
+.sources-list{display:flex;flex-direction:column;gap:8px}
+.source-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.source-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.source-name{font-size:13px;font-weight:700;color:var(--t);word-break:break-all}
+.source-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.source-tech-badge{padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700}
+.source-remove{background:none;border:none;color:var(--t3);padding:4px;cursor:pointer}
+.source-headers{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.header-tag{background:var(--sf2);border:1px solid var(--bd);border-radius:6px;padding:2px 6px;font-size:10px;color:var(--t3);font-family:ui-monospace,'SF Mono',monospace}
+.section-title{font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+
+/* ANALYZE TAB */
+.analyze-wrap{padding:12px}
+.analyze-intro{font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.5}
+.query-grid{display:flex;flex-direction:column;gap:8px}
+.query-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px;cursor:pointer;transition:border-color .15s}
+.query-card:active{border-color:var(--p)}
+.query-card.running{border-color:var(--cy)}
+.query-num{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.query-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px}
+.query-desc{font-size:11px;color:var(--t2);line-height:1.4}
+
+/* BSC TAB */
+.bsc-wrap{padding:12px}
+.bsc-search{display:flex;align-items:center;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:0 10px;gap:8px;margin-bottom:12px}
+.bsc-search input{flex:1;background:none;border:none;outline:none;color:var(--t);font-size:14px;height:38px}
+.bsc-search input::placeholder{color:var(--t3)}
+.bsc-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.bsc-table{width:100%;border-collapse:collapse;font-size:11px}
+.bsc-table th{padding:7px 8px;text-align:left;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);background:var(--sf);white-space:nowrap;font-size:10px}
+.bsc-table td{padding:7px 8px;color:var(--t);border-bottom:1px solid #1a2332;white-space:nowrap;font-family:ui-monospace,'SF Mono',monospace;font-size:11px}
+.bsc-table tr:active td{background:var(--sf2)}
+.bsc-city-badge{padding:2px 6px;border-radius:6px;font-size:9px;font-weight:700}
+
+/* AI TAB */
+.ai-wrap{display:flex;flex-direction:column;height:100%}
+.ai-config{padding:12px;border-bottom:1px solid var(--bd);background:var(--sf);flex-shrink:0}
+.ai-config-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.ai-config-row:last-child{margin-bottom:0}
+.ai-label{font-size:11px;color:var(--t3);width:70px;flex-shrink:0}
+.ai-input{flex:1;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:7px 10px;color:var(--t);font-size:13px;outline:none}
+.ai-input:focus{border-color:var(--p)}
+.ai-messages{flex:1;overflow-y:auto;padding:12px;-webkit-overflow-scrolling:touch}
+.ai-msg{margin-bottom:12px;display:flex;gap:8px}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-bubble{max-width:85%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.5}
+.ai-bubble.user{background:var(--p);color:#fff;border-bottom-right-radius:4px}
+.ai-bubble.assistant{background:var(--sf2);color:var(--t);border-bottom-left-radius:4px;border:1px solid var(--bd)}
+.ai-bubble pre{font-family:ui-monospace,'SF Mono',monospace;font-size:10px;overflow-x:auto;background:#0d1525;padding:8px;border-radius:6px;margin-top:6px;white-space:pre-wrap;word-break:break-all}
+.ai-input-row{padding:8px 12px;border-top:1px solid var(--bd);display:flex;gap:8px;padding-bottom:max(8px,calc(var(--sb) + 4px));flex-shrink:0}
+.ai-text-input{flex:1;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;color:var(--t);font-size:14px;outline:none;resize:none;font-family:inherit;max-height:100px;-webkit-appearance:none}
+.ai-text-input::placeholder{color:var(--t3)}
+.ai-send-btn{background:var(--p);border:none;border-radius:12px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex-shrink:0;-webkit-appearance:none}
+.ai-send-btn:disabled{opacity:.4}
+
+/* TAB BAR */
+.tab-bar{display:flex;background:var(--sf);border-top:1px solid var(--bd);padding-bottom:var(--sb);flex-shrink:0}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;cursor:pointer;border:none;background:none;color:var(--t3);font-size:9px;font-weight:600;gap:3px;transition:color .15s;text-transform:uppercase;letter-spacing:.4px}
+.tab-item.active{color:var(--p)}
+.tab-item svg{width:22px;height:22px}
+
+/* MODAL SHEET */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--sf);border-radius:20px 20px 0 0;width:100%;max-height:90vh;display:flex;flex-direction:column;padding-bottom:calc(var(--sb) + 8px)}
+.modal-drag{width:36px;height:4px;background:var(--bd);border-radius:2px;margin:12px auto 0}
+.modal-title{padding:12px 16px;font-size:16px;font-weight:700;color:var(--t);border-bottom:1px solid var(--bd)}
+.modal-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
+.modal-footer{padding:12px 16px;border-top:1px solid var(--bd);display:flex;gap:8px}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
+.modal-row:last-child{border-bottom:none}
+.modal-row-label{font-size:14px;color:var(--t)}
+.modal-row-val{font-size:13px;color:var(--t2);font-family:ui-monospace,'SF Mono',monospace;text-align:right;max-width:60%;word-break:break-all}
+.checkbox-row{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer}
+.checkbox-row input{width:18px;height:18px;accent-color:var(--p)}
+.checkbox-label{font-size:13px;color:var(--t)}
+.result-block{background:var(--bg);border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px;line-height:1.6;color:var(--t2);font-family:ui-monospace,'SF Mono',monospace;white-space:pre-wrap;overflow-x:auto}
+.result-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.result-table th{padding:6px 8px;background:var(--sf2);color:var(--t3);font-weight:700;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap;font-size:10px}
+.result-table td{padding:6px 8px;color:var(--t);border-bottom:1px solid #1a2332;white-space:nowrap;font-family:ui-monospace,'SF Mono',monospace}
+.result-table tr:nth-child(even) td{background:#0d1420}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--sb) + 72px);left:50%;transform:translateX(-50%) translateY(20px);background:#1e293b;border:1px solid var(--bd);border-radius:12px;padding:10px 16px;font-size:13px;color:var(--t);z-index:200;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+/* UTILS */
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-muted{color:var(--t3)}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}
+.flex{display:flex}.items-center{align-items:center}.gap-2{gap:8px}
+.fw{width:100%}
+.hidden{display:none!important}
+
+/* Abu Mohammed v1.0.4 additions */
+.mode-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.mode-card{flex:1;min-width:140px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:10px;cursor:pointer}
+.mode-card.active{border-color:var(--p);background:#0d1e3d}
+.mode-title{font-size:12px;font-weight:800;color:var(--t)}
+.mode-desc{font-size:10px;color:var(--t3);line-height:1.35;margin-top:3px}
+.progress-box{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:10px;margin:10px 0}
+.progress-track{height:8px;background:#0b1220;border-radius:999px;overflow:hidden;margin:6px 0}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--p),var(--cy),var(--gr));width:0%;transition:width .18s ease}
+.progress-text{font-size:11px;color:var(--t2);font-family:ui-monospace,'SF Mono',monospace;white-space:pre-wrap;max-height:90px;overflow:auto}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.dash-card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:10px;border-left:4px solid var(--p)}
+.dash-card.green{border-left-color:var(--gr)}.dash-card.purple{border-left-color:var(--pu)}.dash-card.orange{border-left-color:var(--yl)}.dash-card.red{border-left-color:var(--rd)}.dash-k{font-size:10px;color:var(--t3);font-weight:800;text-transform:uppercase;letter-spacing:.4px}.dash-v{font-size:22px;font-weight:900;color:var(--t);margin-top:2px}.dash-n{font-size:10px;color:var(--t3);margin-top:2px}
+.hdr-title h1{font-size:16px}
+.result-card,.source-card,.query-card{box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.import-zone{background:linear-gradient(180deg,#0f172a,#0b1220)}
+
+</style>
+</head>
+<body>
+<div id="root">
+  <div style="padding:18px;background:#020817;color:#f1f5f9;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif">
+    <h2 style="margin:0 0 10px">Nokia OI Safari</h2>
+    <p style="color:#94a3b8;line-height:1.5">Loading the offline app…</p>
+    <p style="color:#94a3b8;line-height:1.5">If this message stays and the app does not appear, iPhone opened the HTML in Files/Quick Look mode where JavaScript is blocked. Host this file as <b>index.html</b> on GitHub Pages or any HTTPS static page, then open it in Safari.</p>
+  </div>
+</div>
+<!-- FILE INPUT (hidden) -->
+<input type="file" id="fileInput" class="file-input" multiple accept=".csv,.txt,.tsv,.zip">
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-drag"></div>
+    <div class="modal-title" id="modalTitle">Details</div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ───────────────────────────────────────────────────────────
+// BSC REFERENCE CATALOG (39 records)
+// ───────────────────────────────────────────────────────────
+const BSC_CATALOG = [
+  // Makkah (12)
+  {name:'MKK_BSC01',om:'10.60.1.1', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-N'},
+  {name:'MKK_BSC02',om:'10.60.1.2', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-N'},
+  {name:'MKK_BSC03',om:'10.60.1.3', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-C'},
+  {name:'MKK_BSC04',om:'10.60.1.4', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-C'},
+  {name:'MKK_BSC05',om:'10.60.1.5', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-S'},
+  {name:'MKK_BSC06',om:'10.60.1.6', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-S'},
+  {name:'MKK_BSC07',om:'10.60.2.1', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-E'},
+  {name:'MKK_BSC08',om:'10.60.2.2', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-E'},
+  {name:'MKK_BSC09',om:'10.60.2.3', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-W'},
+  {name:'MKK_BSC10',om:'10.60.2.4', type:'BSC G12',city:'Makkah',  region:'West', cluster:'MKK-W'},
+  {name:'MKK_BSC11',om:'10.60.3.1', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-M'},
+  {name:'MKK_BSC12',om:'10.60.3.2', type:'BSC G16',city:'Makkah',  region:'West', cluster:'MKK-M'},
+  // Madinah (9)
+  {name:'MAD_BSC01',om:'10.61.1.1', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-N'},
+  {name:'MAD_BSC02',om:'10.61.1.2', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-N'},
+  {name:'MAD_BSC03',om:'10.61.1.3', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-C'},
+  {name:'MAD_BSC04',om:'10.61.1.4', type:'BSC G12',city:'Madinah', region:'West', cluster:'MAD-C'},
+  {name:'MAD_BSC05',om:'10.61.1.5', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-S'},
+  {name:'MAD_BSC06',om:'10.61.2.1', type:'BSC G12',city:'Madinah', region:'West', cluster:'MAD-S'},
+  {name:'MAD_BSC07',om:'10.61.2.2', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-E'},
+  {name:'MAD_BSC08',om:'10.61.2.3', type:'BSC G16',city:'Madinah', region:'West', cluster:'MAD-E'},
+  {name:'MAD_BSC09',om:'10.61.2.4', type:'BSC G12',city:'Madinah', region:'West', cluster:'MAD-W'},
+  // Taif (7)
+  {name:'TAF_BSC01',om:'10.62.1.1', type:'BSC G16',city:'Taif',    region:'West', cluster:'TAF-N'},
+  {name:'TAF_BSC02',om:'10.62.1.2', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-N'},
+  {name:'TAF_BSC03',om:'10.62.1.3', type:'BSC G16',city:'Taif',    region:'West', cluster:'TAF-C'},
+  {name:'TAF_BSC04',om:'10.62.1.4', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-C'},
+  {name:'TAF_BSC05',om:'10.62.2.1', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-S'},
+  {name:'TAF_BSC06',om:'10.62.2.2', type:'BSC G16',city:'Taif',    region:'West', cluster:'TAF-S'},
+  {name:'TAF_BSC07',om:'10.62.2.3', type:'BSC G12',city:'Taif',    region:'West', cluster:'TAF-E'},
+  // Abha (5)
+  {name:'ABH_BSC01',om:'10.63.1.1', type:'BSC G16',city:'Abha',    region:'South',cluster:'ABH-N'},
+  {name:'ABH_BSC02',om:'10.63.1.2', type:'BSC G12',city:'Abha',    region:'South',cluster:'ABH-C'},
+  {name:'ABH_BSC03',om:'10.63.1.3', type:'BSC G16',city:'Abha',    region:'South',cluster:'ABH-C'},
+  {name:'ABH_BSC04',om:'10.63.1.4', type:'BSC G12',city:'Abha',    region:'South',cluster:'ABH-S'},
+  {name:'ABH_BSC05',om:'10.63.1.5', type:'BSC G16',city:'Abha',    region:'South',cluster:'ABH-S'},
+  // Baha (4)
+  {name:'BAH_BSC01',om:'10.64.1.1', type:'BSC G16',city:'Baha',    region:'South',cluster:'BAH-C'},
+  {name:'BAH_BSC02',om:'10.64.1.2', type:'BSC G12',city:'Baha',    region:'South',cluster:'BAH-C'},
+  {name:'BAH_BSC03',om:'10.64.1.3', type:'BSC G12',city:'Baha',    region:'South',cluster:'BAH-S'},
+  {name:'BAH_BSC04',om:'10.64.1.4', type:'BSC G16',city:'Baha',    region:'South',cluster:'BAH-S'},
+  // Khamis Mushait (2)
+  {name:'KHM_BSC01',om:'10.65.1.1', type:'BSC G16',city:'Khamis Mushait',region:'South',cluster:'KHM-C'},
+  {name:'KHM_BSC02',om:'10.65.1.2', type:'BSC G16',city:'Khamis Mushait',region:'South',cluster:'KHM-C'},
+];
+
+// ───────────────────────────────────────────────────────────
+// STATE
+// ───────────────────────────────────────────────────────────
+const S = {
+  tab:'search',
+  sources:[],   // [{id,name,headers:[],rows:[{},...],tech,color}]
+  results:[],
+  query:'',
+  history:[],
+  searchCols:null,   // null=all, or Set of header names
+  resultCols:null,   // null=all, or Set of header names
+  dedupKey:null,
+  sortCol:null,sortAsc:true,
+  apiKey:'', hybridUrl:'',
+  chatHistory:[],
+  modal:null,
+  busy:false,
+  importFull:false,        // false = fast preview, true = full accurate
+  importLimit:5000,        // default preview rows per file/member
+  importProgress:'',
+  importPct:0,
+};
+
+const COLORS=['#3b82f6','#06b6d4','#22c55e','#a855f7','#f59e0b','#ef4444','#ec4899','#14b8a6'];
+let colorIdx=0;
+
+// ───────────────────────────────────────────────────────────
+// PERSISTENCE (localStorage)
+// ───────────────────────────────────────────────────────────
+function persist(){
+  try{
+    const p={history:S.history,apiKey:S.apiKey,hybridUrl:S.hybridUrl,importFull:S.importFull};
+    // store only first 3 sources (can be large)
+    localStorage.setItem('noi_state',JSON.stringify(p));
+    // store source data separately
+    const srcs=S.sources.map(s=>({id:s.id,name:s.name,headers:s.headers,tech:s.tech,color:s.color,
+      rows:s.rows.slice(0,5000), previewCap:s.previewCap||null, fullRows:s.fullRows||s.rows.length})); // fast storage cache capped at 5k rows
+    localStorage.setItem('noi_sources',JSON.stringify(srcs));
+  }catch(e){/* storage full */}
+}
+
+function restore(){
+  try{
+    const p=JSON.parse(localStorage.getItem('noi_state')||'{}');
+    S.history=p.history||[];
+    S.apiKey=p.apiKey||'';
+    S.hybridUrl=p.hybridUrl||'';
+    S.importFull=!!p.importFull;
+    S.importLimit=S.importFull?Infinity:5000;
+    const srcs=JSON.parse(localStorage.getItem('noi_sources')||'[]');
+    S.sources=srcs;
+    colorIdx=S.sources.length;
+  }catch(e){}
+}
+
+// ───────────────────────────────────────────────────────────
+// CSV PARSER
+// ───────────────────────────────────────────────────────────
+function detectDelim(text){
+  const s=text.slice(0,2000);
+  const tabs=(s.match(/\t/g)||[]).length;
+  const commas=(s.match(/,/g)||[]).length;
+  const semis=(s.match(/;/g)||[]).length;
+  if(tabs>commas&&tabs>semis) return '\t';
+  if(semis>commas) return ';';
+  return ',';
+}
+
+function parseCSV(text,delim){
+  // Remove BOM
+  text=text.replace(/^\uFEFF/,'');
+  if(!delim) delim=detectDelim(text);
+  const rows=[];
+  let inQ=false,field='',row=[];
+  for(let i=0;i<text.length;i++){
+    const c=text[i],n=text[i+1];
+    if(c==='"'){
+      if(inQ&&n==='"'){field+='"';i++;}
+      else inQ=!inQ;
+    } else if(c===delim&&!inQ){
+      row.push(field);field='';
+    } else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQ){
+      if(c==='\r')i++;
+      row.push(field);field='';
+      if(row.some(x=>x.trim())) rows.push(row);
+      row=[];
+    } else {
+      field+=c;
+    }
+  }
+  if(field||row.length){row.push(field);if(row.some(x=>x.trim()))rows.push(row);}
+  return rows;
+}
+
+function csvToObjects(text,limit=Infinity,onProgress=null){
+  const rows=parseCSV(text);
+  if(rows.length<1) return {headers:[],objs:[],totalRows:0,limited:false};
+  let hi=0;
+  while(hi<rows.length&&rows[hi].every(x=>!x.trim()))hi++;
+  const headers=rows[hi].map(h=>h.trim());
+  const objs=[];
+  const totalRows=Math.max(0,rows.length-hi-1);
+  for(let i=hi+1;i<rows.length;i++){
+    if(!rows[i].some(x=>x.trim())) continue;
+    const obj={};
+    headers.forEach((h,j)=>{obj[h]=(rows[i][j]||'').trim();});
+    objs.push(obj);
+    if(onProgress && objs.length%1000===0) onProgress(objs.length,totalRows);
+    if(objs.length>=limit) break;
+  }
+  return {headers,objs,totalRows,limited:objs.length<totalRows};
+}
+
+// ───────────────────────────────────────────────────────────
+// COLUMN DETECTION HELPERS
+// ───────────────────────────────────────────────────────────
+function findCol(headers,aliases){
+  const hLow=headers.map(h=>h.toLowerCase().replace(/[\s_\-\.]/g,''));
+  for(const a of aliases){
+    const al=a.toLowerCase().replace(/[\s_\-\.]/g,'');
+    let i=hLow.indexOf(al);
+    if(i>=0) return headers[i];
+    i=hLow.findIndex(h=>h.includes(al)||al.includes(h));
+    if(i>=0) return headers[i];
+  }
+  return null;
+}
+
+function cv(row,col){return col?(row[col]||'').toString().trim():'';}
+
+function inferTech(src){
+  const n=src.name.toLowerCase();
+  if(/5g|nr|gn[bB]/.test(n)) return '5G';
+  if(/4g|lte|enb|earfcn/.test(n)) return '4G';
+  if(/2g|gsm|bsc|bts|trx/.test(n)) return '2G';
+  if(/hw|hardware|serial|unit/.test(n)) return 'HW';
+  // check headers
+  const h=src.headers.join(' ').toLowerCase();
+  if(/gnb|nrarfcn|5g/.test(h)) return '5G';
+  if(/enb|earfcn|4g|lte/.test(h)) return '4G';
+  if(/bsc|trx|bcch|gsm|2g/.test(h)) return '2G';
+  if(/serial|unit_type|unittype|hwtype/.test(h)) return 'HW';
+  return 'CM';
+}
+
+function normSite(s){
+  return s.toUpperCase().replace(/[_\-\.\s]+/g,'').replace(/\d{1,3}$/,'');
+}
+
+// ───────────────────────────────────────────────────────────
+// SEARCH ENGINE
+// ───────────────────────────────────────────────────────────
+function runSearch(query){
+  if(!query.trim()||!S.sources.length){S.results=[];return;}
+  const terms=query.toLowerCase().split(/\s+/).filter(Boolean);
+  const hits=[];
+  for(const src of S.sources){
+    const cols=S.searchCols?[...S.searchCols]:src.headers;
+    for(const row of src.rows){
+      const text=cols.map(c=>(row[c]||'').toLowerCase()).join(' ');
+      if(terms.every(t=>text.includes(t))){
+        hits.push({_src:src.id,_srcName:src.name,_tech:src.tech,_color:src.color,...row});
+      }
+    }
+  }
+  // dedup if requested
+  let final=hits;
+  if(S.dedupKey){
+    const seen=new Set();
+    final=hits.filter(h=>{
+      const k=cv(h,S.dedupKey);
+      if(seen.has(k)) return false;
+      seen.add(k);return true;
+    });
+  }
+  // sort
+  if(S.sortCol){
+    final.sort((a,b)=>{
+      const av=cv(a,S.sortCol).toLowerCase();
+      const bv=cv(b,S.sortCol).toLowerCase();
+      return S.sortAsc?(av<bv?-1:av>bv?1:0):(av>bv?-1:av<bv?1:0);
+    });
+  }
+  S.results=final.slice(0,500);
+}
+
+function addHistory(q){
+  if(!q.trim()) return;
+  S.history=S.history.filter(h=>h!==q);
+  S.history.unshift(q);
+  S.history=S.history.slice(0,20);
+  persist();
+}
+
+// ───────────────────────────────────────────────────────────
+// ANALYTICS ENGINE – 20 QUERIES
+// ───────────────────────────────────────────────────────────
+function allRows(){
+  const rows=[];
+  for(const s of S.sources) for(const r of s.rows) rows.push({...r,_src:s.id,_tech:s.tech,_name:s.name,_hdrs:s.headers});
+  return rows;
+}
+
+function hdr(src,aliases){
+  return findCol(src.headers,aliases)||'';
+}
+
+// Q01 – Sites per BSC
+function q01(){
+  const map={};
+  for(const s of S.sources){
+    const bsc=hdr(s,['bsc','bscname','bsc_name']);
+    const site=hdr(s,['site','sitename','bts','btsname','site_name','nodename','cellname']);
+    if(!bsc) continue;
+    for(const r of s.rows){
+      const b=cv(r,bsc);const st=cv(r,site)||cv(r,bsc);
+      if(!b) continue;
+      if(!map[b]) map[b]=new Set();
+      if(st) map[b].add(st);
+    }
+  }
+  return Object.entries(map).sort((a,b)=>b[1].size-a[1].size)
+    .map(([bsc,sites])=>({BSC:bsc,Sites:sites.size}));
+}
+
+// Q02 – TRX per BSC
+function q02(){
+  const map={};
+  for(const s of S.sources){
+    const bsc=hdr(s,['bsc','bscname','bsc_name']);
+    if(!bsc) continue;
+    for(const r of s.rows){
+      const b=cv(r,bsc);
+      if(!b) continue;
+      map[b]=(map[b]||0)+1;
+    }
+  }
+  return Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([BSC,TRX])=>({BSC,TRX}));
+}
+
+// Q03 – Backup Relations
+function q03(){
+  const map={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','bts','sitename','btsname']);
+    const bkp=hdr(s,['backup','isbackup','backupbts','backupsite','spare']);
+    if(!site) continue;
+    for(const r of s.rows){
+      const st=cv(r,site);
+      const b=cv(r,bkp).toLowerCase();
+      if(!st) continue;
+      const isBackup=b==='true'||b==='1'||b==='yes'||b==='backup';
+      if(!map[st]) map[st]={site:st,backup:'No'};
+      if(isBackup) map[st].backup='Yes';
+    }
+  }
+  const res=Object.values(map);
+  const total=res.length,bkpCount=res.filter(x=>x.backup==='Yes').length;
+  return {summary:`${bkpCount} backup sites of ${total} total`,rows:res.slice(0,100)};
+}
+
+// Q04 – Sites per City
+function q04(){
+  const map={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','bts','sitename']);
+    const city=hdr(s,['city','governorate','region','area','province']);
+    if(!site) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),c=cv(r,city)||'Unknown';
+      if(!st) continue;
+      if(!map[c]) map[c]=new Set();
+      map[c].add(st);
+    }
+  }
+  return Object.entries(map).sort((a,b)=>b[1].size-a[1].size)
+    .map(([City,s])=>({City,Sites:s.size}));
+}
+
+// Q05 – Exchange BSC Count
+function q05(){
+  const bscSites={};
+  for(const s of S.sources){
+    const bsc=hdr(s,['bsc','bscname']);
+    const site=hdr(s,['site','bts','sitename']);
+    if(!bsc||!site) continue;
+    for(const r of s.rows){
+      const b=cv(r,bsc),st=cv(r,site);
+      if(!b||!st) continue;
+      if(!bscSites[b]) bscSites[b]=new Set();
+      bscSites[b].add(st);
+    }
+  }
+  // sites served by multiple BSCs
+  const sitesBsc={};
+  for(const [bsc,sites] of Object.entries(bscSites)){
+    for(const site of sites){
+      if(!sitesBsc[site]) sitesBsc[site]=[];
+      sitesBsc[site].push(bsc);
+    }
+  }
+  const multi=Object.entries(sitesBsc).filter(([,b])=>b.length>1)
+    .map(([Site,BSCs])=>({Site,Count:BSCs.length,BSCs:BSCs.join(', ')}));
+  return multi.length?multi:[{Site:'No exchange sites found',Count:0,BSCs:''}];
+}
+
+// Q06 – 5G Without 4G (Tech Gap)
+function q06(){
+  const tech4={},tech5={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename','cell_name','cellname']);
+    const tech=hdr(s,['tech','technology','rat','radio_type','standard']);
+    if(!site||!tech) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),t=cv(r,tech).toUpperCase();
+      if(!st) continue;
+      if(t.includes('5G')||t.includes('NR')) tech5[normSite(st)]=st;
+      if(t.includes('4G')||t.includes('LTE')) tech4[normSite(st)]=st;
+    }
+  }
+  const gap5=Object.entries(tech5).filter(([k])=>!tech4[k]).map(([,v])=>({Site:v,Gap:'Has 5G, missing 4G'}));
+  const gap4=Object.entries(tech4).filter(([k])=>!tech5[k]).map(([,v])=>({Site:v,Gap:'Has 4G, no 5G (normal)'}));
+  return [...gap5,...gap4.slice(0,20)];
+}
+
+// Q07 – CM Without HW Match
+function q07(){
+  const cmSites=new Set(),hwSites=new Set();
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename','bts','node']);
+    if(!site) continue;
+    if(s.tech==='HW'){
+      for(const r of s.rows) if(cv(r,site)) hwSites.add(cv(r,site).toUpperCase());
+    } else {
+      for(const r of s.rows) if(cv(r,site)) cmSites.add(cv(r,site).toUpperCase());
+    }
+  }
+  if(!hwSites.size) return [{Result:'No HW dump loaded – import HW dump to cross-reference'}];
+  const cmOnly=[...cmSites].filter(s=>!hwSites.has(s)).map(s=>({Site:s,Status:'In CM, not in HW'}));
+  const hwOnly=[...hwSites].filter(s=>!cmSites.has(s)).map(s=>({Site:s,Status:'In HW, not in CM'}));
+  return [...cmOnly.slice(0,50),...hwOnly.slice(0,50)];
+}
+
+// Q08 – Duplicate M-Plane / O&M IPs
+function q08(){
+  const ipSites={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename']);
+    const ip=hdr(s,['mplane','mplaneip','oam','omip','ip','ipaddress']);
+    if(!ip) continue;
+    for(const r of s.rows){
+      const i=cv(r,ip),st=cv(r,site)||'?';
+      if(!i||i==='0.0.0.0'||!i.includes('.')) continue;
+      // normalize to /24 subnet
+      const sub=i.split('.').slice(0,3).join('.');
+      if(!ipSites[i]) ipSites[i]=[];
+      if(!ipSites[i].includes(st)) ipSites[i].push(st);
+    }
+  }
+  const dups=Object.entries(ipSites).filter(([,s])=>s.length>1)
+    .sort((a,b)=>b[1].length-a[1].length)
+    .map(([IP,Sites])=>({IP,Count:Sites.length,Sites:Sites.slice(0,5).join(', ')}));
+  return dups.length?dups:[{IP:'No duplicate IPs found',Count:0,Sites:''}];
+}
+
+// Q09 – Site Coordinate Mismatches
+function q09(){
+  const siteLat={},siteLon={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename']);
+    const lat=hdr(s,['lat','latitude']);
+    const lon=hdr(s,['lon','lng','longitude']);
+    if(!site||!lat||!lon) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),la=parseFloat(cv(r,lat)),lo=parseFloat(cv(r,lon));
+      if(!st||isNaN(la)||isNaN(lo)) continue;
+      if(!siteLat[st]){siteLat[st]=la;siteLon[st]=lo;}
+      else {
+        const dLat=Math.abs(siteLat[st]-la),dLon=Math.abs(siteLon[st]-lo);
+        if(dLat>0.001||dLon>0.001){
+          siteLat[st]='MISMATCH';
+        }
+      }
+    }
+  }
+  const mis=Object.entries(siteLat).filter(([,v])=>v==='MISMATCH').map(([Site])=>({Site,Issue:'Coordinate mismatch across sources'}));
+  return mis.length?mis:[{Site:'No coordinate mismatches found',Issue:''}];
+}
+
+// Q10 – Multi-OSS Sites
+function q10(){
+  const siteOss={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename']);
+    const oss=hdr(s,['oss','ossname','nms','ne','oss_name']);
+    if(!site||!oss) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),o=cv(r,oss);
+      if(!st||!o) continue;
+      if(!siteOss[st]) siteOss[st]=new Set();
+      siteOss[st].add(o);
+    }
+  }
+  const multi=Object.entries(siteOss).filter(([,os])=>os.size>1)
+    .map(([Site,Os])=>({Site,Count:Os.size,OSSList:[...Os].join(', ')}));
+  return multi.length?multi:[{Site:'No multi-OSS sites found',Count:0,OSSList:''}];
+}
+
+// Q11 – Software Versions
+function q11(){
+  const verMap={};
+  for(const s of S.sources){
+    const sw=hdr(s,['sw','swversion','software','softwareversion','sw_version']);
+    const site=hdr(s,['site','sitename']);
+    if(!sw) continue;
+    for(const r of s.rows){
+      const v=cv(r,sw);if(!v) continue;
+      if(!verMap[v]) verMap[v]={count:0,sites:new Set()};
+      verMap[v].count++;
+      if(site) verMap[v].sites.add(cv(r,site));
+    }
+  }
+  return Object.entries(verMap).sort((a,b)=>b[1].count-a[1].count)
+    .slice(0,20).map(([SW,d])=>({SW,Count:d.count,Sites:d.sites.size}));
+}
+
+// Q12 – 5G Deployment Types (SA/NSA)
+function q12(){
+  const map={SA:0,NSA:0,FDD:0,TDD:0,Unknown:0};
+  for(const s of S.sources){
+    const mode=hdr(s,['mode','duplex','duplexmode','deploymenttype','5gmode','opmode']);
+    const tech=hdr(s,['tech','technology','rat']);
+    if(!mode) continue;
+    for(const r of s.rows){
+      const m=cv(r,mode).toUpperCase();
+      const t=cv(r,tech||'').toUpperCase();
+      if(!t.includes('5G')&&!t.includes('NR')&&s.tech!=='5G') continue;
+      if(m.includes('SA')) map.SA++;
+      else if(m.includes('NSA')) map.NSA++;
+      else if(m.includes('TDD')) map.TDD++;
+      else if(m.includes('FDD')) map.FDD++;
+      else map.Unknown++;
+    }
+  }
+  return Object.entries(map).filter(([,v])=>v>0).map(([Mode,Count])=>({Mode,Count}));
+}
+
+// Q13 – Bandwidth Summary
+function q13(){
+  const bwMap={};
+  for(const s of S.sources){
+    const bw=hdr(s,['bandwidth','bw','channelbandwidth','dl_bandwidth','rbbandwidth']);
+    if(!bw) continue;
+    for(const r of s.rows){
+      const v=cv(r,bw);if(!v) continue;
+      bwMap[v]=(bwMap[v]||0)+1;
+    }
+  }
+  return Object.entries(bwMap).sort((a,b)=>{
+    const an=parseFloat(a[0]),bn=parseFloat(b[0]);
+    return isNaN(an)||isNaN(bn)?0:bn-an;
+  }).map(([BW_MHz,Count])=>({BW_MHz,Count}));
+}
+
+// Q14 – Cells per Site per Mode
+function q14(){
+  const siteMode={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename']);
+    const mode=hdr(s,['mode','duplex','duplexmode']);
+    if(!site) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),m=cv(r,mode||'')||'Unknown';
+      if(!st) continue;
+      const k=`${st}|${m}`;
+      siteMode[k]=(siteMode[k]||0)+1;
+    }
+  }
+  return Object.entries(siteMode).sort((a,b)=>b[1]-a[1]).slice(0,50)
+    .map(([k,Cells])=>{const [Site,Mode]=k.split('|');return{Site,Mode,Cells};});
+}
+
+// Q15 – Cell Count per Frequency Band
+function q15(){
+  const bandMap={};
+  for(const s of S.sources){
+    const band=hdr(s,['band','freqband','freq_band','earfcnband','nrband','nr_band']);
+    const earfcn=hdr(s,['earfcn','dlearfcn','dl_earfcn']);
+    const arfcn=hdr(s,['nrarfcn','arfcn','nrfrequency']);
+    const bcch=hdr(s,['bcch','freq','frequency','arfcn']);
+    if(!band&&!earfcn&&!arfcn&&!bcch) continue;
+    for(const r of s.rows){
+      let b=cv(r,band);
+      if(!b&&earfcn){const e=parseInt(cv(r,earfcn));b=e?lteBandFromEarfcn(e):'?';}
+      if(!b&&arfcn){const a=parseInt(cv(r,arfcn));b=a?nrBandFromArfcn(a):'?';}
+      if(!b&&bcch) b=cv(r,bcch);
+      if(!b) continue;
+      bandMap[b]=(bandMap[b]||0)+1;
+    }
+  }
+  return Object.entries(bandMap).sort((a,b)=>b[1]-a[1])
+    .map(([Band,Cells])=>({Band,Cells}));
+}
+
+// Q16 – HW Unit Types
+function q16(){
+  const map={};
+  for(const s of S.sources){
+    const unit=hdr(s,['unittype','unit_type','hwtype','hw_type','type','productname']);
+    if(!unit) continue;
+    for(const r of s.rows){
+      const u=cv(r,unit);if(!u) continue;
+      map[u]=(map[u]||0)+1;
+    }
+  }
+  return Object.entries(map).sort((a,b)=>b[1]-a[1]).map(([Unit_Type,Count])=>({Unit_Type,Count}));
+}
+
+// Q17 – OM IP vs M-Plane Mismatch
+function q17(){
+  const mismatches=[];
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename']);
+    const om=hdr(s,['omip','om_ip','oamip','oam_ip']);
+    const mp=hdr(s,['mplane','mplaneip','mplane_ip']);
+    if(!site||!om||!mp) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),o=cv(r,om),m=cv(r,mp);
+      if(!st||!o||!m) continue;
+      // compare /24
+      const os=o.split('.').slice(0,3).join('.');
+      const ms=m.split('.').slice(0,3).join('.');
+      if(os!==ms) mismatches.push({Site:st,OM_IP:o,MPlane_IP:m});
+    }
+  }
+  return mismatches.length?mismatches.slice(0,50):[{Site:'No mismatches found',OM_IP:'',MPlane_IP:''}];
+}
+
+// Q18 – Combined Modes per Site
+function q18(){
+  const siteModes={};
+  for(const s of S.sources){
+    const site=hdr(s,['site','sitename']);
+    const tech=hdr(s,['tech','technology','rat']);
+    if(!site) continue;
+    for(const r of s.rows){
+      const st=cv(r,site),t=cv(r,tech||'')||s.tech||'UN';
+      if(!st) continue;
+      if(!siteModes[st]) siteModes[st]=new Set();
+      siteModes[st].add(t.toUpperCase());
+    }
+  }
+  const combo={};
+  for(const [,modes] of Object.entries(siteModes)){
+    const key=[...modes].sort().join('+');
+    combo[key]=(combo[key]||0)+1;
+  }
+  return Object.entries(combo).sort((a,b)=>b[1]-a[1])
+    .map(([Combination,Sites])=>({Combination,Sites}));
+}
+
+// Q19 – Frequency Layers
+function q19(){
+  const layers={};
+  for(const s of S.sources){
+    const band=hdr(s,['band','freqband','earfcnband']);
+    const tech=hdr(s,['tech','technology','rat']);
+    if(!band||!tech) continue;
+    for(const r of s.rows){
+      const b=cv(r,band),t=cv(r,tech);
+      if(!b||!t) continue;
+      const k=`${t}|B${b}`;
+      layers[k]=(layers[k]||0)+1;
+    }
+  }
+  return Object.entries(layers).sort((a,b)=>b[1]-a[1])
+    .map(([k,Cells])=>{const[Tech,Band]=k.split('|');return{Tech,Band,Cells};});
+}
+
+// Q20 – Bandwidth Detailed
+function q20(){
+  const detail={};
+  for(const s of S.sources){
+    const bw=hdr(s,['bandwidth','bw','channelbw']);
+    const tech=hdr(s,['tech','technology','rat']);
+    const band=hdr(s,['band','freqband']);
+    if(!bw) continue;
+    for(const r of s.rows){
+      const bwv=cv(r,bw),tv=cv(r,tech||'')||s.tech||'UN',bv=cv(r,band||'')||'?';
+      if(!bwv) continue;
+      const k=`${tv}|${bv}|${bwv}`;
+      detail[k]=(detail[k]||0)+1;
+    }
+  }
+  return Object.entries(detail).sort((a,b)=>b[1]-a[1]).slice(0,50)
+    .map(([k,Cells])=>{const[Tech,Band,BW_MHz]=k.split('|');return{Tech,Band,BW_MHz,Cells};});
+}
+
+// LTE Band from EARFCN
+function lteBandFromEarfcn(e){
+  const bands=[[0,599,'B1'],[600,1199,'B2'],[1200,1949,'B3'],[1950,2399,'B4'],
+    [2400,2649,'B5'],[2650,2749,'B6'],[2750,3449,'B7'],[3450,3799,'B8'],
+    [3800,4149,'B9'],[4150,4749,'B10'],[4750,4999,'B11'],[5000,5179,'B12'],
+    [5180,5279,'B13'],[5280,5379,'B14'],[5730,5849,'B17'],[5850,5999,'B18'],
+    [6000,6149,'B19'],[6150,6449,'B20'],[6450,6599,'B21'],[6600,7399,'B22'],
+    [7500,7699,'B23'],[7700,8039,'B24'],[8040,8689,'B25'],[8690,9039,'B26'],
+    [9040,9209,'B27'],[9210,9659,'B28'],[9660,9769,'B29'],[9770,9869,'B30'],
+    [9870,9919,'B31'],[9920,10359,'B32'],[36000,36199,'B33'],[36200,36349,'B34'],
+    [36350,36949,'B35'],[36950,37549,'B36'],[37550,37749,'B37'],[37750,38249,'B38'],
+    [38250,38649,'B39'],[38650,39649,'B40'],[39650,41589,'B41'],
+    [65536,66435,'B65'],[66436,67335,'B66'],[67336,67535,'B67'],[67536,67835,'B68']];
+  for(const [lo,hi,band] of bands) if(e>=lo&&e<=hi) return band;
+  return `B?`;
+}
+
+// NR Band from NR-ARFCN
+function nrBandFromArfcn(a){
+  if(a>=422000&&a<=434000) return 'n1';
+  if(a>=386000&&a<=398000) return 'n3';
+  if(a>=173800&&a<=178800) return 'n5';
+  if(a>=524000&&a<=538000) return 'n7';
+  if(a>=185000&&a<=192000) return 'n8';
+  if(a>=145800&&a<=149200) return 'n12';
+  if(a>=151600&&a<=153600) return 'n20';
+  if(a>=158200&&a<=164200) return 'n28';
+  if(a>=620000&&a<=680000) return 'n38';
+  if(a>=693334&&a<=733334) return 'n40';
+  if(a>=499200&&a<=537999) return 'n41';
+  if(a>=2054166&&a<=2104165) return 'n77';
+  if(a>=2016667&&a<=2070832) return 'n78';
+  if(a>=2229166&&a<=2279165) return 'n79';
+  if(a>=2270833&&a<=2337500) return 'n258';
+  return 'nXX';
+}
+
+
+// Q21-Q60 smart fallback engine for additional reference questions
+function qGeneric(qid){
+  const titleMap={
+    21:['LAC','BSC','cellId'],22:['BSC_Name','LAC'],23:['BSC_Name','BCCH'],24:['LAC','cellId'],
+    25:['BSC_Name','SITE'],26:['SBTSId'],27:['SBTSId'],28:['AbisType'],29:['frequencyBandInUse'],30:['NCC','BCC'],
+    31:['tac'],32:['ECI'],33:['LNBTSId','LNCELId'],34:['ChBw'],35:['earfcn','ChBw'],36:['earfcn','phyCellId'],
+    37:['dlMimoMode'],38:['administrativeState','operationalState'],39:['mPlaneIpAddress','cPlaneIpAddress','uPlaneIpAddress'],40:['pMax'],
+    41:['cellDepType'],42:['NMS','cellDepType'],43:['freqBandIndicatorNR'],44:['nrarfcn'],45:['chBw'],46:['nrCellType'],
+    47:['actBeamforming'],48:['dlMimoMode'],49:['administrativeState','operationalState'],50:['arfcnSsbPbch','gscnOrSsPbchArfcn'],
+    53:['SITE','NMS'],54:['activeSWReleaseVersion','NMS'],55:['mPlaneIpAddress'],56:['cPlaneIpAddress','uPlaneIpAddress'],
+    57:['longitude','latitude'],58:['SITE','longitude','latitude']
+  };
+  if(qid===51 || qid===52 || qid===59 || qid===60){
+    return techPresence(qid);
+  }
+  const aliases=titleMap[qid]||[];
+  return smartGroupByAliases(aliases);
+}
+function smartGroupByAliases(aliases){
+  const map={};
+  for(const s of S.sources){
+    const cols=aliases.map(a=>hdr(s,[a])).filter(Boolean);
+    if(!cols.length) continue;
+    for(const r of s.rows){
+      const key=cols.map(c=>cv(r,c)||'?').join(' | ');
+      if(!key || key.replace(/[ ?|]/g,'')==='') continue;
+      map[key]=(map[key]||0)+1;
+    }
+  }
+  return Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,250).map(([Key,Rows])=>({Key,Rows}));
+}
+function techPresence(qid){
+  const techSites={};
+  for(const s of S.sources){
+    const site=hdr(s,['SITE','site','sitename','bts','btsname','cellName','cellname']);
+    if(!site) continue;
+    for(const r of s.rows){
+      const st=cv(r,site); if(!st) continue;
+      const k=normSite(st);
+      if(!techSites[k]) techSites[k]=new Set();
+      techSites[k].add(s.tech);
+    }
+  }
+  const rows=[];
+  for(const [site,set] of Object.entries(techSites)){
+    const has2=set.has('2G'),has4=set.has('4G'),has5=set.has('5G');
+    if(qid===51 && ((has2&&!has4&&!has5)||(!has2&&has4&&!has5)||(!has2&&!has4&&has5))) rows.push({Site:site,Tech:[...set].join('+')});
+    if(qid===52 && has2&&has4&&has5) rows.push({Site:site,Tech:'2G+4G+5G'});
+    if(qid===59 && has4&&!has5) rows.push({Site:site,Status:'4G but no 5G'});
+    if(qid===60 && has5&&!has4) rows.push({Site:site,Status:'5G but no 4G'});
+  }
+  return rows.slice(0,500);
+}
+
+const QUERIES=[
+  {id:'q01',title:"2G Sites per BSC",desc:"2G Sites per BSC",fn:q01},
+  {id:'q02',title:"TRX per BSC",desc:"TRX per BSC",fn:q02},
+  {id:'q03',title:"Backup (BK) sites \u2014 source & target BSC",desc:"Backup (BK) sites \u2014 source & target BSC",fn:q03},
+  {id:'q04',title:"Sites per City",desc:"Sites per City",fn:q04},
+  {id:'q05',title:"Exchanges & BSC count",desc:"Exchanges & BSC count",fn:q05},
+  {id:'q06',title:"5G missing from 4G",desc:"5G missing from 4G",fn:q06},
+  {id:'q07',title:"CM without HW",desc:"CM without HW",fn:q07},
+  {id:'q08',title:"Duplicate M-Plane IPs",desc:"Duplicate M-Plane IPs",fn:q08},
+  {id:'q09',title:"Site-name mismatches",desc:"Site-name mismatches",fn:q09},
+  {id:'q10',title:"Multi-OSS sites",desc:"Multi-OSS sites",fn:q10},
+  {id:'q11',title:"SW versions per technology",desc:"SW versions per technology",fn:q11},
+  {id:'q12',title:"5G SA / NSA / SA+NSA",desc:"5G SA / NSA / SA+NSA",fn:q12},
+  {id:'q13',title:"BW per technology \u2014 summary",desc:"BW per technology \u2014 summary",fn:q13},
+  {id:'q14',title:"Cells per site per TDD/FDD/IoT",desc:"Cells per site per TDD/FDD/IoT",fn:q14},
+  {id:'q15',title:"Cell count per band",desc:"Cell count per band",fn:q15},
+  {id:'q16',title:"HW unit types",desc:"HW unit types",fn:q16},
+  {id:'q17',title:"O&M IP vs mPlane subnets",desc:"O&M IP vs mPlane subnets",fn:q17},
+  {id:'q18',title:"Combined 4G/5G modes",desc:"Combined 4G/5G modes",fn:q18},
+  {id:'q19',title:"Frequency bands per layer",desc:"Frequency bands per layer",fn:q19},
+  {id:'q20',title:"BW per technology \u2014 detailed site/layer view",desc:"BW per technology \u2014 detailed site/layer view",fn:q20},
+  {id:'q21',title:"2G sites/cells/TRX by LAC",desc:"2G sites/cells/TRX by LAC",fn:()=>qGeneric(21)},
+  {id:'q22',title:"2G sites/cells/TRX by BSC and LAC",desc:"2G sites/cells/TRX by BSC and LAC",fn:()=>qGeneric(22)},
+  {id:'q23',title:"2G BCCH usage by BSC",desc:"2G BCCH usage by BSC",fn:()=>qGeneric(23)},
+  {id:'q24',title:"Duplicate 2G CGI audit (LAC + cellId)",desc:"Duplicate 2G CGI audit (LAC + cellId)",fn:()=>qGeneric(24)},
+  {id:'q25',title:"Top 2G BSCs/sites by TRX",desc:"Top 2G BSCs/sites by TRX",fn:()=>qGeneric(25)},
+  {id:'q26',title:"2G sites without SBTSId",desc:"2G sites without SBTSId",fn:()=>qGeneric(26)},
+  {id:'q27',title:"2G SBTSId sites missing 4G/5G match",desc:"2G SBTSId sites missing 4G/5G match",fn:()=>qGeneric(27)},
+  {id:'q28',title:"2G Abis type summary",desc:"2G Abis type summary",fn:()=>qGeneric(28)},
+  {id:'q29',title:"2G frequency band summary",desc:"2G frequency band summary",fn:()=>qGeneric(29)},
+  {id:'q30',title:"2G NCC/BCC reuse summary",desc:"2G NCC/BCC reuse summary",fn:()=>qGeneric(30)},
+  {id:'q31',title:"4G sites/cells by TAC",desc:"4G sites/cells by TAC",fn:()=>qGeneric(31)},
+  {id:'q32',title:"Duplicate 4G ECI",desc:"Duplicate 4G ECI",fn:()=>qGeneric(32)},
+  {id:'q33',title:"Duplicate 4G LNCELId under same LNBTS",desc:"Duplicate 4G LNCELId under same LNBTS",fn:()=>qGeneric(33)},
+  {id:'q34',title:"4G bandwidth summary by ChBw",desc:"4G bandwidth summary by ChBw",fn:()=>qGeneric(34)},
+  {id:'q35',title:"4G EARFCN/layer summary",desc:"4G EARFCN/layer summary",fn:()=>qGeneric(35)},
+  {id:'q36',title:"4G PCI usage by EARFCN",desc:"4G PCI usage by EARFCN",fn:()=>qGeneric(36)},
+  {id:'q37',title:"4G MIMO mode summary",desc:"4G MIMO mode summary",fn:()=>qGeneric(37)},
+  {id:'q38',title:"4G unlocked but not enabled/onAir",desc:"4G unlocked but not enabled/onAir",fn:()=>qGeneric(38)},
+  {id:'q39',title:"4G missing mPlane/cPlane/uPlane IP",desc:"4G missing mPlane/cPlane/uPlane IP",fn:()=>qGeneric(39)},
+  {id:'q40',title:"4G power pMax summary",desc:"4G power pMax summary",fn:()=>qGeneric(40)},
+  {id:'q41',title:"5G sites/cells by cellDepType",desc:"5G sites/cells by cellDepType",fn:()=>qGeneric(41)},
+  {id:'q42',title:"5G SA / NSA / NSA+SA by NMS",desc:"5G SA / NSA / NSA+SA by NMS",fn:()=>qGeneric(42)},
+  {id:'q43',title:"5G sites/cells by NR band",desc:"5G sites/cells by NR band",fn:()=>qGeneric(43)},
+  {id:'q44',title:"5G sites/cells by NRARFCN",desc:"5G sites/cells by NRARFCN",fn:()=>qGeneric(44)},
+  {id:'q45',title:"5G bandwidth summary by chBw",desc:"5G bandwidth summary by chBw",fn:()=>qGeneric(45)},
+  {id:'q46',title:"5G nrCellType summary",desc:"5G nrCellType summary",fn:()=>qGeneric(46)},
+  {id:'q47',title:"5G beamforming enabled/disabled summary",desc:"5G beamforming enabled/disabled summary",fn:()=>qGeneric(47)},
+  {id:'q48',title:"5G MIMO mode summary",desc:"5G MIMO mode summary",fn:()=>qGeneric(48)},
+  {id:'q49',title:"5G unlocked but not enabled/onAir",desc:"5G unlocked but not enabled/onAir",fn:()=>qGeneric(49)},
+  {id:'q50',title:"5G SSB/GSCN/arfcnSsbPbch summary",desc:"5G SSB/GSCN/arfcnSsbPbch summary",fn:()=>qGeneric(50)},
+  {id:'q51',title:"Sites with 2G only, 4G only, 5G only",desc:"Sites with 2G only, 4G only, 5G only",fn:()=>qGeneric(51)},
+  {id:'q52',title:"Sites with 2G+4G+5G together",desc:"Sites with 2G+4G+5G together",fn:()=>qGeneric(52)},
+  {id:'q53',title:"NMS/OSS mismatch for same physical site",desc:"NMS/OSS mismatch for same physical site",fn:()=>qGeneric(53)},
+  {id:'q54',title:"Software version by technology and NMS",desc:"Software version by technology and NMS",fn:()=>qGeneric(54)},
+  {id:'q55',title:"Same mPlane IP across multiple sites",desc:"Same mPlane IP across multiple sites",fn:()=>qGeneric(55)},
+  {id:'q56',title:"Same cPlane/uPlane IP conflicts",desc:"Same cPlane/uPlane IP conflicts",fn:()=>qGeneric(56)},
+  {id:'q57',title:"Missing latitude/longitude",desc:"Missing latitude/longitude",fn:()=>qGeneric(57)},
+  {id:'q58',title:"Same site with different coordinates",desc:"Same site with different coordinates",fn:()=>qGeneric(58)},
+  {id:'q59',title:"Sites with 4G but no 5G",desc:"Sites with 4G but no 5G",fn:()=>qGeneric(59)},
+  {id:'q60',title:"Sites with 5G but no 4G",desc:"Sites with 5G but no 4G",fn:()=>qGeneric(60)}
+];
+
+
+// ───────────────────────────────────────────────────────────
+// FAST IMPORT PROGRESS + ZIP SUPPORT — v1.0.4
+// ───────────────────────────────────────────────────────────
+function setImportProgress(msg,pct){
+  S.importProgress=msg;
+  if(typeof pct==='number') S.importPct=Math.max(0,Math.min(100,pct));
+  const pt=document.getElementById('progressText');
+  const pb=document.getElementById('progressBar');
+  if(pt) pt.textContent=S.importProgress;
+  if(pb) pb.style.width=S.importPct+'%';
+}
+function appendImportProgress(msg,pct){
+  const line='['+new Date().toLocaleTimeString()+'] '+msg;
+  S.importProgress=line+(S.importProgress?'\n'+S.importProgress:'');
+  if(typeof pct==='number') S.importPct=Math.max(0,Math.min(100,pct));
+  const pt=document.getElementById('progressText');
+  const pb=document.getElementById('progressBar');
+  if(pt) pt.textContent=S.importProgress;
+  if(pb) pb.style.width=S.importPct+'%';
+}
+function setImportMode(full){
+  S.importFull=!!full;
+  S.importLimit=S.importFull?Infinity:5000;
+  persist();
+  render();
+}
+async function listZipCsvMembers(file){
+  const ab=await file.arrayBuffer(); const dv=new DataView(ab); const u8=new Uint8Array(ab);
+  function u16(o){return dv.getUint16(o,true)} function u32(o){return dv.getUint32(o,true)}
+  let eocd=-1; for(let i=u8.length-22;i>=Math.max(0,u8.length-66000);i--){ if(u32(i)===0x06054b50){eocd=i;break;} }
+  if(eocd<0) throw new Error('ZIP end record not found');
+  const total=u16(eocd+10), cdOffset=u32(eocd+16);
+  let p=cdOffset, members=[];
+  for(let i=0;i<total;i++){
+    if(u32(p)!==0x02014b50)break;
+    const method=u16(p+10), compSize=u32(p+20), uncompSize=u32(p+24), nameLen=u16(p+28), extraLen=u16(p+30), commentLen=u16(p+32), lho=u32(p+42);
+    const name=new TextDecoder().decode(u8.slice(p+46,p+46+nameLen));
+    if(name.toLowerCase().match(/\.(csv|txt|tsv)$/)) members.push({name,method,compSize,uncompSize,lho,u8,dv});
+    p += 46+nameLen+extraLen+commentLen;
+  }
+  return members;
+}
+async function zipMemberText(m){
+  const dv=m.dv,u8=m.u8; function u16(o){return dv.getUint16(o,true)} function u32(o){return dv.getUint32(o,true)}
+  const lp=m.lho; if(u32(lp)!==0x04034b50)throw new Error('ZIP local header not found');
+  const nameLen=u16(lp+26), extraLen=u16(lp+28), dataStart=lp+30+nameLen+extraLen;
+  const compressed=new Blob([u8.slice(dataStart,dataStart+m.compSize)]);
+  let blob=compressed;
+  if(m.method===8){
+    if(typeof DecompressionStream==='undefined') throw new Error('Safari cannot decompress this ZIP here. Extract ZIP in Files and import CSV directly.');
+    const ds=new DecompressionStream('deflate-raw');
+    blob=await new Response(compressed.stream().pipeThrough(ds)).blob();
+  } else if(m.method!==0){
+    throw new Error('Unsupported ZIP compression method: '+m.method);
+  }
+  return await blob.text();
+}
+function detectTechFromMember(name,headers){
+  const n=String(name||'').toLowerCase();
+  const h=(headers||[]).join(' ').toLowerCase();
+  if(/\b2g\b|gsm|bsc|bcf|bts/.test(n)) return '2G';
+  if(/\b4g\b|lte|lnbts|lncel|eci/.test(n)) return '4G';
+  if(/\b5g\b|nr|nrbts|nrcell|gnb/.test(n)) return '5G';
+  if(/hw|hardware|serial|unit/.test(n)) return 'HW';
+  if(/bscid|bcfid|btsid|bsc_name|bcch|num_trx/.test(h)) return '2G';
+  if(/lnbtsid|lncelid|eci|earfcn|tac/.test(h)) return '4G';
+  if(/nrbtsid|nrcellid|nrarfcn|freqbandindicatornr/.test(h)) return '5G';
+  if(/unit_type|unittype|serial|id_code|vendor/.test(h)) return 'HW';
+  return '';
+}
+async function importZipFile(file){
+  appendImportProgress('Opening ZIP: '+file.name,5);
+  const members=await listZipCsvMembers(file);
+  if(!members.length){showToast('No CSV/TXT inside ZIP');return [];}
+  appendImportProgress('ZIP contains '+members.length+' CSV/TXT members',10);
+  const imported=[];
+  let i=0;
+  for(const m of members){
+    i++;
+    appendImportProgress('Reading '+m.name+'...',10+Math.floor((i/members.length)*25));
+    const text=await zipMemberText(m);
+    const parsed=csvToObjects(text,S.importLimit,(done,total)=>{
+      if(done%5000===0) setImportProgress(`Parsing ${m.name}: ${done.toLocaleString()} / ${total.toLocaleString()} rows`,35+Math.floor((done/Math.max(total,1))*50));
+    });
+    if(!parsed.headers.length) continue;
+    const id='src_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const src={id,name:m.name.split('/').pop(),headers:parsed.headers,rows:parsed.objs,tech:'?',color:COLORS[colorIdx%COLORS.length],fullRows:parsed.totalRows,previewCap:parsed.limited?S.importLimit:null};
+    src.tech=detectTechFromMember(m.name,parsed.headers)||inferTech(src);
+    colorIdx++;
+    S.sources.push(src);
+    imported.push(src);
+    appendImportProgress(`✓ ${src.name}: ${src.rows.length.toLocaleString()} rows${parsed.limited?' preview of '+parsed.totalRows.toLocaleString():''}`,60+Math.floor((i/members.length)*35));
+    await new Promise(r=>setTimeout(r,0));
+  }
+  persist();
+  return imported;
+}
+
+// ───────────────────────────────────────────────────────────
+// FILE IMPORT
+// ───────────────────────────────────────────────────────────
+async function importFile(file){
+  showToast('Importing '+file.name+'…');
+  setSignal(true);
+  try{
+    if(file.name.toLowerCase().endsWith('.zip')){
+      const imported=await importZipFile(file);
+      showToast(`✓ ZIP imported: ${imported.length} source${imported.length!==1?'s':''}`);
+      setSignal(false);
+      return imported[0]||null;
+    }
+    return await new Promise(resolve=>{
+      const reader=new FileReader();
+      reader.onload=e=>{
+        try{
+          const text=e.target.result;
+          appendImportProgress('Parsing '+file.name+'...',20);
+          const {headers,objs,totalRows,limited}=csvToObjects(text,S.importLimit,(done,total)=>{
+            if(done%5000===0) setImportProgress(`Parsing ${file.name}: ${done.toLocaleString()} / ${total.toLocaleString()} rows`,20+Math.floor((done/Math.max(total,1))*70));
+          });
+          if(!headers.length){showToast('⚠️ No headers found');return resolve(null);}
+          const id='src_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+          const src={id,name:file.name,headers,rows:objs,
+            tech:'?',color:COLORS[colorIdx%COLORS.length],fullRows:totalRows,previewCap:limited?S.importLimit:null};
+          src.tech=inferTech(src);
+          colorIdx++;
+          S.sources.push(src);
+          persist();
+          appendImportProgress(`✓ ${file.name}: ${objs.length.toLocaleString()} rows${limited?' preview of '+totalRows.toLocaleString():''}, ${headers.length} cols`,100);
+          showToast(`✓ ${file.name}: ${objs.length.toLocaleString()} rows${limited?' preview':''}`);
+          setSignal(false);
+          resolve(src);
+        }catch(err){
+          showToast('⚠️ Parse error: '+err.message);
+          setSignal(false);
+          resolve(null);
+        }
+      };
+      reader.onerror=()=>{showToast('⚠️ Read error');setSignal(false);resolve(null);};
+      reader.readAsText(file,'utf-8');
+    });
+  }catch(err){
+    showToast('⚠️ '+err.message);
+    appendImportProgress('ERROR: '+err.message,0);
+    setSignal(false);
+    return null;
+  }
+}
+
+// ───────────────────────────────────────────────────────────
+// TOAST & SIGNAL
+// ───────────────────────────────────────────────────────────
+let toastTimer=null;
+function showToast(msg,dur=2500){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),dur);
+}
+
+function setSignal(on){
+  const sb=document.querySelector('.signal-bars');
+  if(sb) on?sb.classList.add('active'):sb.classList.remove('active');
+}
+
+// ───────────────────────────────────────────────────────────
+// MODAL
+// ───────────────────────────────────────────────────────────
+function openModal(title,body,footer=''){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modalFooter').innerHTML=footer;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+document.getElementById('modalOverlay').addEventListener('click',e=>{
+  if(e.target.id==='modalOverlay') closeModal();
+});
+
+// ───────────────────────────────────────────────────────────
+// COPY / SHARE
+// ───────────────────────────────────────────────────────────
+function copyText(text){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>showToast('Copied!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    showToast('Copied!');
+  }
+}
+
+function resultsToCsv(rows){
+  if(!rows.length) return '';
+  const ks=Object.keys(rows[0]).filter(k=>!k.startsWith('_'));
+  const lines=[ks.join(',')];
+  for(const r of rows){
+    lines.push(ks.map(k=>`"${(r[k]||'').toString().replace(/"/g,'""')}"`).join(','));
+  }
+  return lines.join('\n');
+}
+
+function tableToText(rows){
+  if(!rows.length) return '';
+  const ks=Object.keys(rows[0]).filter(k=>!k.startsWith('_'));
+  const widths=ks.map(k=>Math.max(k.length,...rows.map(r=>(r[k]||'').toString().length)));
+  const line=widths.map(w=>'-'.repeat(w));
+  const fmt=r=>ks.map((k,i)=>(r[k]||'').toString().padEnd(widths[i])).join(' | ');
+  return [fmt(Object.fromEntries(ks.map(k=>[k,k]))),
+    line.join('-+-'),...rows.map(fmt)].join('\n');
+}
+
+// ───────────────────────────────────────────────────────────
+// TECH BADGE HTML
+// ───────────────────────────────────────────────────────────
+function techBadge(tech){
+  const t=(tech||'').toUpperCase();
+  const cls=t==='2G'?'tech-2g':t==='4G'?'tech-4g':t==='5G'?'tech-5g':t==='HW'?'tech-hw':'tech-un';
+  return `<span class="tech-badge ${cls}">${t||'?'}</span>`;
+}
+
+// ───────────────────────────────────────────────────────────
+// RENDER FUNCTIONS
+// ───────────────────────────────────────────────────────────
+
+function renderHeader(){
+  const bars='<span></span>'.repeat(5);
+  const srcs=S.sources.map(s=>`<span class="src-chip" style="border-color:${s.color};color:${s.color}">${s.name.replace(/\.csv$/i,'').slice(0,20)}</span>`).join('');
+  return `
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">N</div>
+    <div class="hdr-title">
+      <h1>Nokia Operations Intelligence</h1>
+      <p>${S.sources.length} source${S.sources.length!==1?'s':''} · ${
+        S.sources.reduce((a,s)=>a+s.rows.length,0).toLocaleString()} rows</p>
+    </div>
+    <div class="signal-bars">${bars}</div>
+  </div>
+  ${S.sources.length?`<div class="src-strip">${srcs}</div>`:''}
+</div>`;
+}
+
+function renderSearchBar(){
+  const chips=S.history.slice(0,8).map(h=>
+    `<button class="hist-chip" onclick="quickSearch(${JSON.stringify(h)})">${escHtml(h)}</button>`).join('');
+  return `
+<div class="search-wrap">
+  <div class="search-row">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input class="search-input" id="searchInput" type="search" placeholder="Search all loaded data…"
+        value="${escHtml(S.query)}" autocomplete="off" autocorrect="off" spellcheck="false"
+        oninput="onSearchInput(this.value)" onkeydown="if(event.key==='Enter'){commitSearch();this.blur()}">
+    </div>
+    <button class="icon-btn${S.searchCols?'.active':''}" onclick="openSearchColsModal()" title="Search columns">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+        <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+        <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+    </button>
+    <button class="icon-btn" onclick="openSortModal()" title="Sort">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 5h10M11 9h7M11 13h4M3 17l3 3 3-3M6 20V4"/>
+      </svg>
+    </button>
+  </div>
+  ${chips?`<div class="hist-chips">${chips}</div>`:''}
+</div>`;
+}
+
+function renderResultMeta(){
+  if(!S.results.length) return '';
+  const total=S.results.length;
+  return `
+<div class="result-meta">
+  <span class="result-count">${total.toLocaleString()} result${total!==1?'s':''}</span>
+  <div class="meta-btns">
+    ${S.dedupKey?`<button class="mini-btn" onclick="clearDedup()">Dedup: ${S.dedupKey.slice(0,10)} ✕</button>`:''}
+    <button class="mini-btn" onclick="openResultColsModal()">Columns</button>
+    <button class="mini-btn" onclick="copyAllResults()">Copy All</button>
+  </div>
+</div>`;
+}
+
+function renderResultCards(){
+  if(!S.results.length){
+    if(!S.query) return `
+<div class="empty-state">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  </svg>
+  <h3>Start searching</h3>
+  <p>Import CSV files in the Import tab, then type a site name, BSC, IP address, or any value</p>
+</div>`;
+    return `
+<div class="empty-state">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  </svg>
+  <h3>No results</h3>
+  <p>Try different keywords or check the search columns filter</p>
+</div>`;
+  }
+
+  return S.results.map((r,i)=>{
+    const src=S.sources.find(s=>s.id===r._src);
+    const dispCols=S.resultCols?[...S.resultCols]:(src?src.headers.slice(0,8):[]);
+    const fields=dispCols.filter(c=>!c.startsWith('_')&&r[c]!==undefined&&r[c]!=='')
+      .slice(0,8)
+      .map(c=>`<span class="card-kv"><span>${escHtml(c)}:</span><b>${escHtml(String(r[c]).slice(0,50))}</b></span>`)
+      .join(' &nbsp;');
+
+    const siteCol=src?findCol(src.headers,['site','sitename','bts','btsname','node','cellname']):'';
+    const siteName=siteCol?cv(r,siteCol):Object.values(r).find(v=>v&&typeof v==='string'&&v.length>2&&!v.includes('.'))||'';
+
+    return `
+<div class="result-card" onclick="openHitDetail(${i})">
+  <div class="card-hdr">
+    <div class="card-site">${escHtml(String(siteName||'Row '+(i+1)).slice(0,60))}</div>
+    ${techBadge(r._tech)}
+  </div>
+  <div class="card-src" style="color:${r._color||'var(--t3)'}">${escHtml(r._srcName||'')}</div>
+  <div class="card-fields">${fields}</div>
+</div>`;
+  }).join('');
+}
+
+function renderSearchTab(){
+  return `
+${renderSearchBar()}
+${S.query?renderResultMeta():''}
+<div class="content" id="searchContent">
+  <div class="results-list">${renderResultCards()}</div>
+</div>`;
+}
+
+function renderImportTab(){
+  const srcs=S.sources.map((s,i)=>`
+<div class="source-card">
+  <div class="source-card-hdr">
+    <div>
+      <div class="source-name">${escHtml(s.name)}</div>
+      <div class="source-meta">${s.rows.length.toLocaleString()} rows${s.previewCap?' preview of '+(s.fullRows||'many').toLocaleString():''} · ${s.headers.length} columns</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      ${techBadge(s.tech)}
+      <button class="source-remove" onclick="removeSource(${i})">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="source-headers">
+    ${s.headers.slice(0,20).map(h=>`<span class="header-tag">${escHtml(h)}</span>`).join('')}
+    ${s.headers.length>20?`<span class="header-tag text-muted">+${s.headers.length-20} more</span>`:''}
+  </div>
+</div>`).join('');
+
+  return `
+<div class="content">
+<div class="import-wrap">
+  <div class="import-zone">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+    <p>Import Nokia CM dump, HW dump, CM ZIP, HW ZIP, or any CSV/TSV file. Multiple files supported.</p>
+    <div class="mode-row">
+      <div class="mode-card ${!S.importFull?'active':''}" onclick="setImportMode(false)">
+        <div class="mode-title">Fast Preview</div>
+        <div class="mode-desc">Loads first 5,000 rows per file/member. Best for iPhone speed.</div>
+      </div>
+      <div class="mode-card ${S.importFull?'active':''}" onclick="setImportMode(true)">
+        <div class="mode-title">Full Accurate</div>
+        <div class="mode-desc">Loads all rows. Slower, better for final audit.</div>
+      </div>
+    </div>
+    <div class="progress-box">
+      <div class="progress-track"><div class="progress-bar" id="progressBar" style="width:${S.importPct||0}%"></div></div>
+      <div class="progress-text" id="progressText">${escHtml(S.importProgress||'Ready. Choose CSV or ZIP files.')}</div>
+    </div>
+    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Import CSV files
+    </button>
+  </div>
+  ${S.sources.length?`
+  <div class="section-title mt-3">Loaded Sources</div>
+  <div class="sources-list">${srcs}</div>
+  <div class="mt-3" style="display:flex;gap:8px">
+    <button class="btn btn-secondary fw" onclick="document.getElementById('fileInput').click()">+ Add more</button>
+    <button class="btn btn-danger" onclick="clearAllSources()">Clear all</button>
+  </div>`:''}
+</div>
+</div>`;
+}
+
+
+function renderDashboardCards(){
+  const techCount={};
+  for(const s of S.sources) techCount[s.tech]=(techCount[s.tech]||0)+s.rows.length;
+  const totalRows=S.sources.reduce((a,s)=>a+s.rows.length,0);
+  const totalSources=S.sources.length;
+  const previewCount=S.sources.filter(s=>s.previewCap).length;
+  const uniqueCols=new Set(S.sources.flatMap(s=>s.headers));
+  const cards=[
+    ['Sources',totalSources,'loaded files',''],
+    ['Rows',totalRows.toLocaleString(),previewCount?previewCount+' preview source(s)':'full/loaded rows','green'],
+    ['Columns',uniqueCols.size,'unique headers','purple'],
+    ['2G Rows',(techCount['2G']||0).toLocaleString(),'detected','green'],
+    ['4G Rows',(techCount['4G']||0).toLocaleString(),'detected',''],
+    ['5G Rows',(techCount['5G']||0).toLocaleString(),'detected','purple'],
+    ['HW Rows',(techCount['HW']||0).toLocaleString(),'detected','orange'],
+    ['Mode',S.importFull?'Full':'Fast','import mode',previewCount?'red':'']
+  ];
+  return `<div class="dashboard-grid">${cards.map(c=>`<div class="dash-card ${c[3]||''}"><div class="dash-k">${c[0]}</div><div class="dash-v">${c[1]}</div><div class="dash-n">${c[2]}</div></div>`).join('')}</div>`;
+}
+
+function renderAnalyzeTab(){
+  const noSrc=!S.sources.length;
+  return `
+<div class="content">
+<div class="analyze-wrap">
+  <p class="analyze-intro">${noSrc?'⚠️ Import CSV files first to enable intelligence queries.':
+    `Running on ${S.sources.reduce((a,s)=>a+s.rows.length,0).toLocaleString()} loaded rows across ${S.sources.length} source${S.sources.length!==1?'s':''}. ${S.sources.some(s=>s.previewCap)?'Fast Preview is active for at least one source.':''}`}</p>
+  ${!noSrc?renderDashboardCards():''}
+  <div class="query-grid">
+    ${QUERIES.map((q,i)=>`
+    <div class="query-card${noSrc?' hidden':''}" onclick="runQuery('${q.id}')">
+      <div class="query-num">Q${String(i+1).padStart(2,'0')}</div>
+      <div class="query-title">${q.title}</div>
+      <div class="query-desc">${q.desc}</div>
+    </div>`).join('')}
+    ${noSrc?`
+    <div class="query-card" style="opacity:.4;cursor:default">
+      <div class="query-num">Q01–Q20</div>
+      <div class="query-title">60 Intelligence Questions</div>
+      <div class="query-desc">Import Nokia RAN CM/HW dumps to unlock dashboard, search, and AI cards</div>
+    </div>`:''}
+  </div>
+</div>
+</div>`;
+}
+
+function renderBscTab(){
+  return `
+<div class="content">
+<div class="bsc-wrap">
+  <div class="section-title">BSC Reference Catalog (${BSC_CATALOG.length})</div>
+  <div class="bsc-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input id="bscSearch" placeholder="Search BSC name, city, cluster, IP…" oninput="renderBscTable(this.value)">
+  </div>
+  <div class="bsc-table-wrap" id="bscTableWrap">
+    ${renderBscTableHtml('')}
+  </div>
+</div>
+</div>`;
+}
+
+function renderBscTableHtml(q){
+  const city_colors={'Makkah':'#1e3a5f','Madinah':'#052e16','Taif':'#2d1b69','Abha':'#3b1515','Baha':'#1a1f15','Khamis Mushait':'#15231a'};
+  const rows=BSC_CATALOG.filter(b=>{
+    if(!q) return true;
+    const s=(b.name+b.om+b.type+b.city+b.cluster).toLowerCase();
+    return q.toLowerCase().split(/\s+/).every(t=>s.includes(t));
+  });
+  return `
+<table class="bsc-table">
+  <thead><tr>
+    <th>BSC Name</th><th>O&M IP</th><th>Type</th><th>City</th><th>Cluster</th>
+  </tr></thead>
+  <tbody>
+    ${rows.map(b=>`<tr onclick="openBscDetail(${JSON.stringify(JSON.stringify(b))})">
+      <td>${b.name}</td>
+      <td>${b.om}</td>
+      <td>${b.type}</td>
+      <td><span class="bsc-city-badge" style="background:${city_colors[b.city]||'#1a1a2e'};color:var(--t)">${b.city}</span></td>
+      <td>${b.cluster}</td>
+    </tr>`).join('')}
+    ${!rows.length?'<tr><td colspan="5" style="color:var(--t3);text-align:center;padding:20px">No matching BSC records</td></tr>':''}
+  </tbody>
+</table>`;
+}
+
+function renderBscTable(q){
+  document.getElementById('bscTableWrap').innerHTML=renderBscTableHtml(q);
+}
+
+function renderAiTab(){
+  const msgs=S.chatHistory.map(m=>`
+<div class="ai-msg ${m.role}">
+  <div class="ai-bubble ${m.role}">${m.role==='assistant'?formatAiContent(m.content):escHtml(m.content)}</div>
+</div>`).join('');
+
+  return `
+<div class="ai-wrap">
+  <div class="ai-config">
+    <div class="ai-config-row">
+      <span class="ai-label">API Key</span>
+      <input class="ai-input" type="password" placeholder="sk-ant-… or sk-…"
+        value="${escHtml(S.apiKey)}" oninput="S.apiKey=this.value;persist()">
+    </div>
+    <div class="ai-config-row">
+      <span class="ai-label">Endpoint</span>
+      <input class="ai-input" type="url" placeholder="Custom endpoint (optional)"
+        value="${escHtml(S.hybridUrl)}" oninput="S.hybridUrl=this.value;persist()">
+      <button class="btn btn-secondary" style="padding:6px 10px;font-size:11px" onclick="clearChat()">Clear</button>
+    </div>
+  </div>
+  <div class="ai-messages" id="aiMessages">
+    ${!msgs?`<div class="empty-state" style="padding:40px 16px">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;margin-bottom:10px">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <h3>AI Assistant</h3>
+      <p>Ask questions about your loaded data, network topology, or Nokia RAN configuration. Enter your Anthropic or OpenAI API key above.</p>
+      </div>`:msgs}
+  </div>
+  <div class="ai-input-row">
+    <textarea class="ai-text-input" id="aiInput" placeholder="Ask about your network data…" rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiMessage()}"
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+    <button class="ai-send-btn" id="aiSendBtn" onclick="sendAiMessage()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>`;
+}
+
+function formatAiContent(text){
+  // Simple formatting: code blocks, newlines
+  return escHtml(text)
+    .replace(/```([^`]+)```/g,'<pre>$1</pre>')
+    .replace(/`([^`]+)`/g,'<code style="background:var(--bg);padding:1px 4px;border-radius:3px;font-family:ui-monospace,monospace;font-size:11px">$1</code>')
+    .replace(/\n/g,'<br>');
+}
+
+// ───────────────────────────────────────────────────────────
+// TAB BAR
+// ───────────────────────────────────────────────────────────
+function renderTabBar(){
+  const tabs=[
+    {id:'search',icon:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>',label:'Search'},
+    {id:'import',icon:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',label:'Import'},
+    {id:'analyze',icon:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',label:'Analyze'},
+    {id:'bsc',icon:'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',label:'BSC'},
+    {id:'ai',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',label:'AI Chat'},
+  ];
+  return `<div class="tab-bar">
+    ${tabs.map(t=>`
+    <button class="tab-item${S.tab===t.id?' active':''}" onclick="switchTab('${t.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${t.icon}</svg>
+      ${t.label}
+    </button>`).join('')}
+  </div>`;
+}
+
+// ───────────────────────────────────────────────────────────
+// MAIN RENDER
+// ───────────────────────────────────────────────────────────
+function render(){
+  const root=document.getElementById('root');
+  let body='';
+  switch(S.tab){
+    case 'search':  body=renderSearchTab();break;
+    case 'import':  body=renderImportTab();break;
+    case 'analyze': body=renderAnalyzeTab();break;
+    case 'bsc':     body=renderBscTab();break;
+    case 'ai':      body=renderAiTab();break;
+  }
+  root.innerHTML=`${renderHeader()}${body}${renderTabBar()}`;
+
+  // Restore search input focus state
+  if(S.tab==='search'){
+    const inp=document.getElementById('searchInput');
+    if(inp&&S.query){inp.setSelectionRange(S.query.length,S.query.length);}
+  }
+}
+
+// ───────────────────────────────────────────────────────────
+// EVENT HANDLERS
+// ───────────────────────────────────────────────────────────
+function switchTab(t){S.tab=t;render();}
+
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let searchDebounce=null;
+function onSearchInput(val){
+  S.query=val;
+  clearTimeout(searchDebounce);
+  searchDebounce=setTimeout(()=>{
+    if(val.length>=2||val===''){
+      runSearch(val);
+      render();
+    }
+  },200);
+}
+
+function commitSearch(){
+  if(S.query.trim()){
+    addHistory(S.query.trim());
+    runSearch(S.query);
+    render();
+  }
+}
+
+function quickSearch(q){
+  S.query=q;
+  runSearch(q);
+  render();
+  const inp=document.getElementById('searchInput');
+  if(inp) inp.value=q;
+}
+
+function removeSource(i){
+  S.sources.splice(i,1);
+  S.results=[];S.query='';
+  persist();render();
+}
+
+function clearAllSources(){
+  if(!confirm('Clear all imported sources?')) return;
+  S.sources=[];S.results=[];S.query='';colorIdx=0;
+  persist();render();
+}
+
+function clearDedup(){S.dedupKey=null;runSearch(S.query);render();}
+
+function copyAllResults(){
+  const text=resultsToCsv(S.results);
+  copyText(text);
+}
+
+// HIT DETAIL MODAL
+function openHitDetail(i){
+  const r=S.results[i];
+  if(!r) return;
+  const src=S.sources.find(s=>s.id===r._src);
+  const keys=src?src.headers:Object.keys(r).filter(k=>!k.startsWith('_'));
+  const rows=keys.filter(k=>r[k]!==undefined&&r[k]!=='')
+    .map(k=>`<div class="modal-row">
+      <span class="modal-row-label">${escHtml(k)}</span>
+      <span class="modal-row-val">${escHtml(String(r[k]))}</span>
+    </div>`).join('');
+
+  // check for coordinates
+  const lat=src?findCol(src.headers,['lat','latitude']):null;
+  const lon=src?findCol(src.headers,['lon','lng','longitude']):null;
+  const la=lat?parseFloat(cv(r,lat)):NaN;
+  const lo=lon?parseFloat(cv(r,lon)):NaN;
+  const mapBtn=(!isNaN(la)&&!isNaN(lo))?
+    `<button class="btn btn-secondary" onclick="window.open('https://maps.apple.com/?q=${la},${lo}','_blank')">📍 Map</button>`:'';
+
+  const body=`<div>${rows}</div>`;
+  const rowText=keys.filter(k=>r[k]!==undefined&&r[k]!=='').map(k=>`${k}: ${r[k]}`).join('\n');
+  const footer=`
+    ${mapBtn}
+    <button class="btn btn-secondary" onclick="copyText(${JSON.stringify(rowText)})">Copy</button>
+    <button class="btn btn-secondary" onclick="searchByField(${JSON.stringify(r)})">Site 360</button>
+    <button class="btn btn-primary" onclick="closeModal()">Done</button>`;
+  openModal((Object.values(r).find(v=>v&&typeof v==='string'&&v.length>1&&!v.includes('.'))||'Row Detail')+'',body,footer);
+}
+
+// SITE 360
+function searchByField(row){
+  closeModal();
+  const src=S.sources.find(s=>s.id===row._src);
+  const siteCol=src?findCol(src.headers,['site','sitename','bts','btsname','node']):'';
+  const site=siteCol?cv(row,siteCol):'';
+  if(site){
+    S.query=site;runSearch(site);
+    S.tab='search';render();
+    showToast(`Site 360: ${site}`);
+  }
+}
+
+// BSC DETAIL
+function openBscDetail(jsonStr){
+  const b=JSON.parse(jsonStr);
+  const body=`
+<div class="modal-row"><span class="modal-row-label">BSC Name</span><span class="modal-row-val">${escHtml(b.name)}</span></div>
+<div class="modal-row"><span class="modal-row-label">O&M IP</span><span class="modal-row-val">${escHtml(b.om)}</span></div>
+<div class="modal-row"><span class="modal-row-label">Type</span><span class="modal-row-val">${escHtml(b.type)}</span></div>
+<div class="modal-row"><span class="modal-row-label">City</span><span class="modal-row-val">${escHtml(b.city)}</span></div>
+<div class="modal-row"><span class="modal-row-label">Region</span><span class="modal-row-val">${escHtml(b.region)}</span></div>
+<div class="modal-row"><span class="modal-row-label">Cluster</span><span class="modal-row-val">${escHtml(b.cluster)}</span></div>`;
+  const footer=`
+<button class="btn btn-secondary" onclick="quickSearch(${JSON.stringify(b.name)});closeModal();switchTab('search')">🔍 Search Data</button>
+<button class="btn btn-secondary" onclick="copyText('${b.name}\\nO&M: ${b.om}\\nType: ${b.type}\\nCity: ${b.city}\\nCluster: ${b.cluster}')">Copy</button>
+<button class="btn btn-primary" onclick="closeModal()">Done</button>`;
+  openModal(b.name,body,footer);
+}
+
+// SEARCH COLUMN MODAL
+function openSearchColsModal(){
+  if(!S.sources.length){showToast('Import data first');return;}
+  const allHdrs=[...new Set(S.sources.flatMap(s=>s.headers))].sort();
+  const selected=S.searchCols||new Set(allHdrs);
+  const rows=allHdrs.map(h=>`
+<label class="checkbox-row">
+  <input type="checkbox" ${selected.has(h)?'checked':''} onchange="toggleSearchCol('${escHtml(h)}',this.checked)">
+  <span class="checkbox-label">${escHtml(h)}</span>
+</label>`).join('');
+  const body=`<div>
+    <div style="margin-bottom:12px;display:flex;gap:8px">
+      <button class="btn btn-secondary" onclick="setAllSearchCols(true)">All</button>
+      <button class="btn btn-secondary" onclick="setAllSearchCols(false)">None</button>
+    </div>
+    ${rows}
+  </div>`;
+  openModal('Search Columns',body,`<button class="btn btn-primary fw" onclick="closeModal();runSearch(S.query);render()">Apply</button>`);
+}
+
+function toggleSearchCol(h,checked){
+  const all=[...new Set(S.sources.flatMap(s=>s.headers))];
+  if(!S.searchCols) S.searchCols=new Set(all);
+  if(checked) S.searchCols.add(h); else S.searchCols.delete(h);
+  if(S.searchCols.size===all.length) S.searchCols=null;
+}
+
+function setAllSearchCols(all){
+  const hs=[...new Set(S.sources.flatMap(s=>s.headers))];
+  S.searchCols=all?null:new Set();
+  // refresh checkboxes
+  document.querySelectorAll('.checkbox-row input').forEach(cb=>{cb.checked=all;});
+}
+
+// RESULT COLUMN MODAL
+function openResultColsModal(){
+  if(!S.sources.length) return;
+  const allHdrs=[...new Set(S.sources.flatMap(s=>s.headers))].sort();
+  const selected=S.resultCols||new Set(allHdrs);
+  const rows=allHdrs.map(h=>`
+<label class="checkbox-row">
+  <input type="checkbox" ${selected.has(h)?'checked':''} onchange="toggleResultCol('${escHtml(h)}',this.checked)">
+  <span class="checkbox-label">${escHtml(h)}</span>
+</label>`).join('');
+
+  // dedup column option
+  const dedupOpts=allHdrs.map(h=>`<option value="${escHtml(h)}" ${S.dedupKey===h?'selected':''}>${escHtml(h)}</option>`).join('');
+
+  const body=`<div>
+    <div style="margin-bottom:12px">
+      <div class="section-title">Display Columns</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="btn btn-secondary" onclick="setAllResultCols(true)">All</button>
+        <button class="btn btn-secondary" onclick="setAllResultCols(false)">None</button>
+      </div>
+      ${rows}
+    </div>
+    <div style="margin-top:16px">
+      <div class="section-title">Deduplicate by</div>
+      <select style="width:100%;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:8px;color:var(--t);font-size:13px" onchange="S.dedupKey=this.value||null">
+        <option value="">No deduplication</option>
+        ${dedupOpts}
+      </select>
+    </div>
+  </div>`;
+  openModal('Result Options',body,`<button class="btn btn-primary fw" onclick="closeModal();runSearch(S.query);render()">Apply</button>`);
+}
+
+function toggleResultCol(h,checked){
+  const all=[...new Set(S.sources.flatMap(s=>s.headers))];
+  if(!S.resultCols) S.resultCols=new Set(all);
+  if(checked) S.resultCols.add(h); else S.resultCols.delete(h);
+  if(S.resultCols.size===all.length) S.resultCols=null;
+}
+
+function setAllResultCols(all){
+  const hs=[...new Set(S.sources.flatMap(s=>s.headers))];
+  S.resultCols=all?null:new Set();
+  document.querySelectorAll('.checkbox-row input').forEach(cb=>{cb.checked=all;});
+}
+
+// SORT MODAL
+function openSortModal(){
+  if(!S.sources.length){showToast('Import data first');return;}
+  const hdrs=[...new Set(S.sources.flatMap(s=>s.headers))].sort();
+  const opts=hdrs.map(h=>`<option value="${escHtml(h)}" ${S.sortCol===h?'selected':''}>${escHtml(h)}</option>`).join('');
+  const body=`<div>
+    <div class="section-title">Sort by Column</div>
+    <select style="width:100%;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:8px;color:var(--t);font-size:13px;margin-bottom:12px" id="sortColSel">
+      <option value="">No sorting</option>${opts}
+    </select>
+    <div style="display:flex;gap:8px">
+      <label class="checkbox-row"><input type="radio" name="sortDir" value="asc" ${S.sortAsc?'checked':''} onchange="S.sortAsc=true"><span class="checkbox-label">Ascending ↑</span></label>
+      <label class="checkbox-row"><input type="radio" name="sortDir" value="desc" ${!S.sortAsc?'checked':''} onchange="S.sortAsc=false"><span class="checkbox-label">Descending ↓</span></label>
+    </div>
+  </div>`;
+  openModal('Sort Results',body,`<button class="btn btn-primary fw" onclick="S.sortCol=document.getElementById('sortColSel').value||null;closeModal();runSearch(S.query);render()">Apply Sort</button>`);
+}
+
+// RUN ANALYTICS QUERY
+function runQuery(qid){
+  if(!S.sources.length){showToast('Import data first');return;}
+  const qdef=QUERIES.find(q=>q.id===qid);
+  if(!qdef) return;
+  setSignal(true);
+  setTimeout(()=>{
+    try{
+      const result=qdef.fn();
+      setSignal(false);
+      showQueryResult(qdef.title,result);
+    }catch(e){
+      setSignal(false);
+      showToast('⚠️ '+e.message);
+    }
+  },50);
+}
+
+function showQueryResult(title,result){
+  let body='';
+  if(!result){
+    body='<div class="empty-state"><p>No results</p></div>';
+  } else if(result.summary!==undefined){
+    // Q03 style with summary + rows
+    const rows=result.rows||[];
+    body=`<div class="result-block">${escHtml(result.summary)}</div>${renderResultTable(rows.slice(0,100))}`;
+  } else if(Array.isArray(result)){
+    if(!result.length) body='<div class="empty-state"><p>No data found in loaded sources for this query</p></div>';
+    else body=renderResultTable(result.slice(0,200));
+  } else {
+    body=`<div class="result-block">${escHtml(JSON.stringify(result,null,2))}</div>`;
+  }
+
+  const copyStr=Array.isArray(result)?tableToText(result.slice(0,200)):'';
+  openModal(title,body,`
+<button class="btn btn-secondary" onclick="copyText(${JSON.stringify(copyStr)})">Copy</button>
+<button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+
+function renderResultTable(rows){
+  if(!rows||!rows.length) return '';
+  const ks=Object.keys(rows[0]).filter(k=>!k.startsWith('_'));
+  return `<div class="bsc-table-wrap"><table class="result-table">
+    <thead><tr>${ks.map(k=>`<th>${escHtml(k)}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r=>`<tr>${ks.map(k=>`<td>${escHtml(String(r[k]||''))}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+// ───────────────────────────────────────────────────────────
+// AI CHAT
+// ───────────────────────────────────────────────────────────
+function clearChat(){S.chatHistory=[];render();}
+
+async function sendAiMessage(){
+  const inp=document.getElementById('aiInput');
+  const msg=(inp.value||'').trim();
+  if(!msg) return;
+  if(!S.apiKey){showToast('⚠️ Enter API key first');return;}
+
+  S.chatHistory.push({role:'user',content:msg});
+  inp.value='';inp.style.height='auto';
+  document.getElementById('aiSendBtn').disabled=true;
+  setSignal(true);
+
+  // Build context from loaded data
+  const dataCtx=S.sources.length?
+    `\n\nLoaded Nokia data sources:\n${S.sources.map(s=>`- ${s.name}: ${s.rows.length} rows, tech=${s.tech}, columns=[${s.headers.slice(0,15).join(', ')}]`).join('\n')}\n\nSample rows (first 3 of each source):\n${S.sources.map(s=>s.rows.slice(0,3).map(r=>JSON.stringify(r)).join('\n')).join('\n---\n')}`:
+    '\n\nNo data loaded yet.';
+
+  const sysPrompt=`You are Nokia Operations Intelligence AI, an expert Nokia RAN (2G/4G/5G) network assistant. Analyze loaded CM dumps, HW dumps, and network data. Be concise and technical. Answer in the same language as the user's question.${dataCtx}`;
+
+  const msgs=S.chatHistory.map(m=>({role:m.role,content:m.content}));
+
+  try{
+    // Detect API type
+    const isAnthropic=S.apiKey.startsWith('sk-ant')||(!S.hybridUrl&&!S.apiKey.startsWith('sk-'));
+    const endpoint=S.hybridUrl||(isAnthropic?'https://api.anthropic.com/v1/messages':'https://api.openai.com/v1/chat/completions');
+
+    let response,text;
+    if(isAnthropic&&!S.hybridUrl){
+      response=await fetch(endpoint,{method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,system:sysPrompt,
+          messages:msgs.slice(-10)})});
+      const d=await response.json();
+      text=(d.content||[]).map(b=>b.type==='text'?b.text:'').join('');
+      if(d.error) throw new Error(d.error.message);
+    } else {
+      // OpenAI / custom endpoint
+      response=await fetch(endpoint,{method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.apiKey},
+        body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1500,
+          messages:[{role:'system',content:sysPrompt},...msgs.slice(-10)]})});
+      const d=await response.json();
+      text=(d.choices||[{message:{content:''}}])[0].message.content;
+      if(d.error) throw new Error(d.error.message);
+    }
+
+    S.chatHistory.push({role:'assistant',content:text});
+  }catch(e){
+    S.chatHistory.push({role:'assistant',content:'Error: '+e.message});
+  }
+
+  setSignal(false);
+  render();
+  const msgs_el=document.getElementById('aiMessages');
+  if(msgs_el) msgs_el.scrollTop=msgs_el.scrollHeight;
+  document.getElementById('aiSendBtn').disabled=false;
+}
+
+// ───────────────────────────────────────────────────────────
+// FILE INPUT HANDLER
+// ───────────────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change',async e=>{
+  const files=[...e.target.files];
+  if(!files.length) return;
+  S.importProgress=''; S.importPct=0;
+  let done=0;
+  for(const f of files){
+    done++;
+    appendImportProgress(`Starting ${done}/${files.length}: ${f.name}`, Math.floor((done-1)/files.length*100));
+    await importFile(f);
+    await new Promise(r=>setTimeout(r,0));
+  }
+  e.target.value='';  // reset so same file can be re-imported
+  if(S.tab==='import'||S.tab==='search') render();
+  else{S.tab='import';render();}
+});
+
+// ───────────────────────────────────────────────────────────
+// KEYBOARD HANDLING
+// ───────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeModal();
+});
+
+// Prevent body scroll bounce on iOS
+document.addEventListener('touchmove',e=>{
+  if(e.target.closest('.content,.ai-messages,.modal-body,.bsc-table-wrap')) return;
+  e.preventDefault();
+},{passive:false});
+
+
+function showLocalFileWarningIfNeeded(){
+  try{
+    if(location.protocol==='file:'){
+      setTimeout(()=>showToast('Local file mode detected. If import/save fails, open through HTTPS/GitHub Pages.',6000),1000);
+    }
+  }catch(e){}
+}
+
+// ───────────────────────────────────────────────────────────
+// INIT
+// ───────────────────────────────────────────────────────────
+restore();
+render();
+showLocalFileWarningIfNeeded();
+
+// Show "add to home screen" hint on first launch
+if(!localStorage.getItem('noi_launched')){
+  localStorage.setItem('noi_launched','1');
+  setTimeout(()=>{
+    if(window.navigator.standalone===false){
+      showToast('Tip: Add to Home Screen for full-screen offline use',4000);
+    }
+  },2000);
+}
+</script>
+</body>
+</html>
