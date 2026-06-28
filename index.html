@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- NOI_VERSION:1.0.9_ANDROID_PARITY -->
+<meta name="noi-version" content="1.0.9-android-parity-dashboard">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nokia OI">
-<title>Nokia OI Safari Offline PWA v1.0.8</title>
+<title>Nokia OI Safari Offline PWA v1.0.9</title>
 <style>
 :root{
   --bg:#020817;--sf:#0f172a;--sf2:#1e293b;--bd:#334155;
@@ -219,17 +221,59 @@ html,body{height:100%;background:var(--bg);color:var(--t);font-family:-apple-sys
 .import-zone{background:linear-gradient(180deg,#0f172a,#0b1220)}
 
 
-/* v1.0.8 offline PWA status */
+/* v1.0.9 offline PWA status */
 .offline-pill{position:fixed;right:10px;bottom:calc(var(--sb) + 74px);z-index:90;background:#0f172a;border:1px solid #334155;color:#94a3b8;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.4px}
 .offline-pill.ok{border-color:#22c55e;color:#22c55e}
 .offline-pill.warn{border-color:#f59e0b;color:#f59e0b}
 
 
-/* v1.0.8 AI offline + ChatGPT connect chips */
+/* v1.0.9 AI offline + ChatGPT connect chips */
 .ai-chip-row{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.ai-chip-row::-webkit-scrollbar{display:none}
 .ai-chip{background:#0b1220;border:1px solid var(--bd);border-radius:999px;color:var(--t2);font-size:10px;font-weight:800;padding:6px 9px;white-space:nowrap;cursor:pointer}
 .ai-chip:active{opacity:.7}.ai-mode-note{font-size:11px;color:var(--t2);line-height:1.45;margin-top:6px}.ai-mode-note b{color:#22c55e}.ai-action-btn{background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--t);font-size:11px;font-weight:800;padding:7px 9px;white-space:nowrap;cursor:pointer}
 .ai-action-btn.green{border-color:#16a34a;color:#22c55e}.ai-action-btn.blue{border-color:#2563eb;color:#60a5fa}.ai-action-btn.purple{border-color:#7c3aed;color:#c084fc}
+
+
+/* v1.0.9 Android parity dashboard additions */
+.android-workflow{background:#e1edf9;border-bottom:1px solid #c2d7eb;display:flex;gap:8px;overflow-x:auto;padding:8px;scrollbar-width:none}
+.android-workflow::-webkit-scrollbar{display:none}
+.wf-btn{border:none;border-radius:12px;color:white;font-weight:800;font-size:11px;padding:10px 12px;white-space:nowrap;box-shadow:0 4px 12px rgba(15,23,42,.16)}
+.wf-blue{background:#0b62d6}.wf-purple{background:#7c3aed}.wf-green{background:#179469}.wf-cyan{background:#0891b2}.wf-orange{background:#f97316}.wf-slate{background:#475569}.wf-gold{background:#b7791f}.wf-navy{background:#0f2a44}
+.android-filter-card{display:flex;gap:8px;align-items:center;background:#ffffff;color:#0f2a44;border:1px solid #cbd5e1;border-radius:14px;margin:8px 10px 5px;padding:8px;box-shadow:0 3px 10px rgba(15,23,42,.12)}
+.android-filter-title{font-size:11px;font-weight:900;color:#0f2a44;letter-spacing:.6px}
+.android-select{flex:1;background:#f6f9fd;border:1px solid #ccdbeb;border-radius:10px;color:#0f2a44;font-weight:700;font-size:12px;padding:9px 8px}
+.android-status{margin:6px 10px;background:#fff7d6;border:1px solid #efcf60;color:#5b4900;border-radius:12px;padding:9px 10px;font-size:12px;font-weight:900;line-height:1.35}
+.android-copilot{margin:6px 10px;background:#e8f8f1;border:1px solid #84cdad;color:#125644;border-radius:12px;padding:10px;font-size:12px;font-weight:900;line-height:1.4}
+.android-section{font-size:12px;font-weight:900;color:#334155;text-transform:uppercase;letter-spacing:.9px;margin:14px 10px 6px}
+.android-card-row{display:flex;gap:9px;overflow-x:auto;padding:4px 10px 10px;scrollbar-width:none}
+.android-card-row::-webkit-scrollbar{display:none}
+.android-card{min-width:132px;max-width:160px;background:#f8fbff;border:1px solid #d6e4f2;border-radius:16px;padding:11px 10px;box-shadow:0 5px 14px rgba(15,23,42,.12);border-left:5px solid #0b62d6;color:#0f172a}
+.android-card .k{font-size:10px;font-weight:900;color:#475569;text-transform:uppercase;letter-spacing:.45px;line-height:1.2}
+.android-card .v{font-size:22px;font-weight:950;color:#0b62d6;margin-top:3px;white-space:nowrap}
+.android-card .n{font-size:10px;color:#64748b;margin-top:3px;line-height:1.25}
+.android-card.green{border-left-color:#179469}.android-card.green .v{color:#179469}
+.android-card.purple{border-left-color:#7c3aed}.android-card.purple .v{color:#7c3aed}
+.android-card.orange{border-left-color:#f97316}.android-card.orange .v{color:#f97316}
+.android-card.red{border-left-color:#dc2626}.android-card.red .v{color:#dc2626}
+.android-card.cyan{border-left-color:#0891b2}.android-card.cyan .v{color:#0891b2}
+.android-card.navy{border-left-color:#0f2a44}.android-card.navy .v{color:#0f2a44}
+.android-chart{background:#ffffff;color:#0f172a;border:1px solid #d6e4f2;border-radius:16px;margin:8px 10px;padding:12px;box-shadow:0 4px 12px rgba(15,23,42,.10)}
+.android-chart-title{font-size:12px;font-weight:900;color:#0f2a44;margin-bottom:8px}
+.android-bar-row{display:grid;grid-template-columns:90px 1fr 54px;gap:8px;align-items:center;margin:7px 0;font-size:11px}
+.android-bar-label{color:#334155;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.android-bar-track{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+.android-bar-fill{height:100%;background:linear-gradient(90deg,#0b62d6,#06b6d4);border-radius:999px}
+.android-bar-val{color:#0f172a;font-family:ui-monospace,'SF Mono',monospace;text-align:right}
+.android-metric-row{display:flex;gap:8px;overflow-x:auto;padding:4px 10px 10px}
+.android-metric{min-width:105px;height:78px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.android-metric .mv{font-size:21px;font-weight:950;color:#0b62d6}
+.android-metric .mk{font-size:11px;font-weight:800;color:#334155;text-align:center}
+.parity-note{background:#0f172a;border:1px solid #334155;border-radius:14px;margin:8px 10px;padding:10px;color:#cbd5e1;font-size:11px;line-height:1.45}
+.quick-list{display:flex;flex-direction:column;gap:7px}
+.quick-item{background:#0b1220;border:1px solid #334155;border-radius:12px;padding:9px;color:#e2e8f0}
+.quick-item b{color:#60a5fa}
+.modal-input{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;color:var(--t);font-size:14px;padding:10px;outline:none}
+.done-badge{display:inline-block;background:#052e16;color:#22c55e;border:1px solid #16a34a;border-radius:999px;font-size:10px;font-weight:900;padding:4px 8px;margin-left:6px}
 
 </style>
 <link rel="manifest" href="./manifest.webmanifest">
@@ -2662,7 +2706,7 @@ function showLocalFileWarningIfNeeded(){
 
 
 // ───────────────────────────────────────────────────────────
-// OFFLINE PWA SERVICE WORKER REGISTRATION — v1.0.8
+// OFFLINE PWA SERVICE WORKER REGISTRATION — v1.0.9
 // ───────────────────────────────────────────────────────────
 function addOfflinePill(text,cls){
   try{
@@ -2678,7 +2722,7 @@ async function registerOfflinePWA(){
       addOfflinePill('Offline cache unsupported','warn');
       return;
     }
-    const reg=await navigator.serviceWorker.register('./sw.js?v=108');
+    const reg=await navigator.serviceWorker.register('./sw.js?v=109');
     addOfflinePill(navigator.onLine?'Offline cache ready':'Offline mode','ok');
     if(reg && reg.update) reg.update().catch(()=>{});
     window.addEventListener('online',()=>addOfflinePill('Online + cached','ok'));
@@ -2706,5 +2750,351 @@ if(!localStorage.getItem('noi_launched')){
   },2000);
 }
 </script>
+
+<script>
+// ───────────────────────────────────────────────────────────
+// v1.0.9 Android parity dashboard foundation
+// ───────────────────────────────────────────────────────────
+const NOI_VERSION = '1.0.9-android-parity-dashboard';
+
+function nfmt(v){return Number(v||0).toLocaleString();}
+function allHeaders(){return [...new Set(S.sources.flatMap(s=>s.headers||[]))];}
+function findAnyCol(headers, aliases){return findCol(headers||[], aliases)||'';}
+function rowSiteFromSource(row,src){
+  const c=findAnyCol(src.headers,['SITE','site','sitename','BTS_NAME','BTS_NAME','BTS','Node','NODE','MRBTS_Name','LNBTS_Name','NRBTS_Name','cellName','name']);
+  return c?cv(row,c):'';
+}
+function canonicalSiteName(x){return normSite(String(x||'')).replace(/[^A-Z0-9]/g,'');}
+function collectSitesByTech(){
+  const out={ALL:new Set(),CM:new Set(),HW:new Set(),'2G':new Set(),'4G':new Set(),'5G':new Set()};
+  for(const s of S.sources){
+    const siteCol=findAnyCol(s.headers,['SITE','site','sitename','BTS_NAME','BTS','Node','NODE','MRBTS_Name','LNBTS_Name','NRBTS_Name','cellName','name']);
+    for(const r of s.rows){
+      const st=canonicalSiteName(siteCol?cv(r,siteCol):'');
+      if(!st) continue;
+      out.ALL.add(st);
+      if(s.tech==='HW') out.HW.add(st); else out.CM.add(st);
+      if(out[s.tech]) out[s.tech].add(st);
+    }
+  }
+  return out;
+}
+function countRowsByTech(){
+  const m={CM:0,HW:0,'2G':0,'4G':0,'5G':0,OTHER:0};
+  for(const s of S.sources){
+    const n=(s.rows||[]).length;
+    if(s.tech==='HW') m.HW+=n; else m.CM+=n;
+    if(m[s.tech]!==undefined) m[s.tech]+=n; else m.OTHER+=n;
+  }
+  return m;
+}
+function mapSourceRows(){
+  const m={};
+  for(const s of S.sources) m[s.name.replace(/\.(csv|txt|tsv)$/i,'').slice(0,22)]=(s.rows||[]).length;
+  return m;
+}
+function mapTechSites(sites){
+  return {'2G':sites['2G'].size,'4G':sites['4G'].size,'5G':sites['5G'].size,'HW':sites.HW.size};
+}
+function countDistinctByAlias(aliases, srcFilter){
+  const set=new Set();
+  for(const s of S.sources){
+    if(srcFilter && !srcFilter(s)) continue;
+    const col=findAnyCol(s.headers,aliases);
+    if(!col) continue;
+    for(const r of s.rows){const v=cv(r,col); if(v) set.add(v);}
+  }
+  return set.size;
+}
+function countMissingCoords(){
+  let missing=0, total=0;
+  for(const s of S.sources){
+    const siteCol=findAnyCol(s.headers,['SITE','site','sitename','node']);
+    const lat=findAnyCol(s.headers,['latitude','lat']);
+    const lon=findAnyCol(s.headers,['longitude','lon','lng']);
+    if(!siteCol) continue;
+    for(const r of s.rows){
+      const st=cv(r,siteCol); if(!st) continue;
+      total++;
+      if(!lat||!lon||!cv(r,lat)||!cv(r,lon)) missing++;
+    }
+  }
+  return {missing,total,ready:Math.max(0,total-missing)};
+}
+function countDuplicateByAliases(aliases){
+  const map={};
+  for(const s of S.sources){
+    const col=findAnyCol(s.headers,aliases);
+    const siteCol=findAnyCol(s.headers,['SITE','site','sitename','node']);
+    if(!col) continue;
+    for(const r of s.rows){
+      const v=cv(r,col); if(!v || v==='0.0.0.0') continue;
+      const st=siteCol?canonicalSiteName(cv(r,siteCol)):'?';
+      if(!map[v]) map[v]=new Set();
+      map[v].add(st||'?');
+    }
+  }
+  return Object.values(map).filter(set=>set.size>1).length;
+}
+function calculateBscTrx(){
+  let total=0, bscWithData=new Set();
+  for(const s of S.sources){
+    const bsc=findAnyCol(s.headers,['BSC_Name','BSCName','BSC','BSCId']);
+    const trx=findAnyCol(s.headers,['num_trx','trx','TRX','trxCount']);
+    if(!bsc && s.tech!=='2G') continue;
+    for(const r of s.rows){
+      const b=bsc?cv(r,bsc):'';
+      if(b) bscWithData.add(b);
+      if(trx){
+        const n=parseInt(cv(r,trx),10);
+        total += Number.isFinite(n)?n:1;
+      }else if(s.tech==='2G') total += 1;
+    }
+  }
+  return {bsc:bscWithData.size,totalTrx:total};
+}
+function classify5gModes(){
+  const siteModes={SA:new Set(),NSA:new Set(),BOTH:new Set(),UNKNOWN:new Set()};
+  for(const s of S.sources.filter(x=>x.tech==='5G')){
+    const siteCol=findAnyCol(s.headers,['SITE','site','sitename','MRBTS_Name','NRBTS_Name','cellName']);
+    const dep=findAnyCol(s.headers,['cellDepType','deploymentType','mode','operationMode','nrCellType']);
+    for(const r of s.rows){
+      const st=canonicalSiteName(siteCol?cv(r,siteCol):''); if(!st) continue;
+      const v=(dep?cv(r,dep):'').toUpperCase();
+      if(v.includes('SA') && v.includes('NSA')) siteModes.BOTH.add(st);
+      else if(v.includes('NSA')) siteModes.NSA.add(st);
+      else if(v.includes('SA')) siteModes.SA.add(st);
+      else siteModes.UNKNOWN.add(st);
+    }
+  }
+  for(const st of siteModes.SA){ if(siteModes.NSA.has(st)) siteModes.BOTH.add(st); }
+  for(const st of siteModes.BOTH){ siteModes.SA.delete(st); siteModes.NSA.delete(st); }
+  return siteModes;
+}
+function dashboardModel(){
+  const sites=collectSitesByTech();
+  const rows=countRowsByTech();
+  const coords=countMissingCoords();
+  const bsc=calculateBscTrx();
+  const f5=classify5gModes();
+  const totalRows=S.sources.reduce((a,s)=>a+(s.rows||[]).length,0);
+  const cmNoHw=[...sites.CM].filter(x=>!sites.HW.has(x)).length;
+  const multiOssCount=countMultiOssSites();
+  const swCount=countDistinctByAlias(['activeSWReleaseVersion','swVersion','softwareVersion','SW','SW_VERSION']);
+  const duplicateIp=countDuplicateByAliases(['mPlaneIpAddress','mplaneip','mPlane','oamip','omip','ipAddress']);
+  return {sites,rows,coords,bsc,f5,totalRows,cmNoHw,multiOssCount,swCount,duplicateIp,headers:allHeaders().length};
+}
+function countMultiOssSites(){
+  const map={};
+  for(const s of S.sources){
+    const siteCol=findAnyCol(s.headers,['SITE','site','sitename','node']);
+    const ossCol=findAnyCol(s.headers,['NMS','OSS','ossname','SRAN_NMS']);
+    if(!siteCol||!ossCol) continue;
+    for(const r of s.rows){
+      const st=canonicalSiteName(cv(r,siteCol)); const o=cv(r,ossCol);
+      if(!st||!o) continue;
+      if(!map[st]) map[st]=new Set();
+      map[st].add(o);
+    }
+  }
+  return Object.values(map).filter(s=>s.size>1).length;
+}
+function cardHtml(title,value,note,cls,onclick){
+  const action=onclick?` onclick="${onclick}"`:'';
+  return `<div class="android-card ${cls||''}"${action}><div class="k">${escHtml(title)}</div><div class="v">${escHtml(String(value))}</div><div class="n">${escHtml(note||'')}</div></div>`;
+}
+function renderDashboardCards(){
+  const m=dashboardModel();
+  const cards=[
+    ['Physical Sites',nfmt(m.sites.ALL.size),'CM SITE + HW NODE canonical','navy',"switchTab(\'search\')"],
+    ['CM Rows',nfmt(m.rows.CM),'Configuration records','cyan',"switchTab(\'import\')"],
+    ['HW Rows',nfmt(m.rows.HW),'Inventory records','orange',"switchTab(\'import\')"],
+    ['Total Rows',nfmt(m.totalRows),'Current loaded browser DB','navy',''],
+    ['Data Sources',nfmt(S.sources.length),'CSV/ZIP/PWA local sources','purple',"showLoadedSourcesDialog()"],
+    ['AI Headers',nfmt(m.headers),'Count/list/group/duplicate/missing','green',"showSelfCheck()"],
+    ['BSC Nodes',nfmt(BSC_CATALOG.length),'Embedded O&M reference','orange',"switchTab(\'bsc\')"],
+    ['2G TRX',nfmt(m.bsc.totalTrx),'Unique/row TRX calculation','red',"runQuery(\'q02\')"],
+    ['2G Sites',nfmt(m.sites['2G'].size),'GSM canonical sites','green',"runQuery(\'q21\')"],
+    ['4G Sites',nfmt(m.sites['4G'].size),'LTE canonical sites','cyan',"runQuery(\'q31\')"],
+    ['5G Sites',nfmt(m.sites['5G'].size),'NR canonical sites','purple',"runQuery(\'q41\')"],
+    ['5G NSA+SA',nfmt(m.f5.BOTH.size),'Dual capability sites','purple',"runQuery(\'q12\')"],
+    ['5G NSA',nfmt(m.f5.NSA.size),'NSA-only detected sites','purple',"runQuery(\'q12\')"],
+    ['5G SA',nfmt(m.f5.SA.size),'SA-only detected sites','purple',"runQuery(\'q12\')"],
+    ['CM no HW',nfmt(m.cmNoHw),'Fast reconciliation indicator','red',"runQuery(\'q07\')"],
+    ['Multi-OSS',nfmt(m.multiOssCount),'Same site under >1 NMS/OSS','orange',"runQuery(\'q10\')"],
+    ['Duplicate IP',nfmt(m.duplicateIp),'M-Plane/O&M conflicts','red',"runQuery(\'q08\')"],
+    ['SW Versions',nfmt(m.swCount),'Distinct software values','green',"runQuery(\'q11\')"],
+    ['Maps Ready',nfmt(m.coords.ready),'Rows with coordinates','cyan',"showToast(\'Map export is web-limited; use Site 360 evidence.\')"]
+  ];
+  return `<div class="android-card-row">${cards.map(c=>cardHtml(...c)).join('')}</div>`;
+}
+function renderBarChart(title,map){
+  const entries=Object.entries(map||{}).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const max=Math.max(1,...entries.map(([,v])=>v));
+  return `<div class="android-chart"><div class="android-chart-title">${escHtml(title)}</div>${entries.length?entries.map(([k,v])=>`<div class="android-bar-row"><div class="android-bar-label">${escHtml(k)}</div><div class="android-bar-track"><div class="android-bar-fill" style="width:${Math.max(3,Math.round(v/max*100))}%"></div></div><div class="android-bar-val">${nfmt(v)}</div></div>`).join(''):'<div class="text-muted">No data yet.</div>'}</div>`;
+}
+function renderWorkflowToolbar(){
+  const btn=(txt,cls,act)=>`<button class="wf-btn ${cls}" onclick="${act}">${txt}</button>`;
+  return `<div class="android-workflow">
+    ${btn('⌕ Search','wf-blue',"switchTab('search')")}
+    ${btn('AI Quick Q01–Q60','wf-purple',"showQuickAiDialog()")}
+    ${btn('AI Ask AI','wf-blue',"showAskAiDialog()")}
+    ${btn('AI ChatGPT + DB','wf-green',"showHybridChatGptDialog()")}
+    ${btn('AI Copilot','wf-green',"showAiCopilotDialog()")}
+    ${btn('▣ Sources','wf-cyan',"showLoadedSourcesDialog()")}
+    ${btn('▤ Manage Data','wf-purple',"showManageDataDialog()")}
+    ${btn('⌕ Search Fields','wf-cyan',"openSearchColsModal()")}
+    ${btn('⚙ Result Columns','wf-slate',"openResultColsModal()")}
+    ${btn('BSC Intelligence','wf-orange',"switchTab('bsc')")}
+    ${btn('⬇ Import Data','wf-blue',"switchTab('import')")}
+    ${btn('⚡ Analyze','wf-gold',"switchTab('analyze')")}
+    ${btn('⌖ Site 360°','wf-green',"promptSite360()")}
+    ${btn('✓ Self Check','wf-navy',"showSelfCheck()")}
+  </div>`;
+}
+function renderFilterCard(){
+  return `<div class="android-filter-card"><div class="android-filter-title">FILTERS</div>
+    <select class="android-select" onchange="S.sourceDashFilter=this.value;render()"><option>All Sources</option><option>CM</option><option>HW</option><option>Other</option></select>
+    <select class="android-select" onchange="S.techDashFilter=this.value;render()"><option>All Technologies</option><option>2G</option><option>4G</option><option>5G</option></select>
+  </div>`;
+}
+function renderMetricStrip(){
+  const hits=S.results||[];
+  const sites=new Set();
+  for(const r of hits){ for(const [k,v] of Object.entries(r)){ if(/site|node|bts/i.test(k)&&v) sites.add(canonicalSiteName(v)); } }
+  const metrics=[
+    ['Keywords',S.query?S.query.trim().split(/\s+/).length:0],
+    ['Matched',hits.length?1:0],
+    ['Not Found',S.query&&!hits.length?1:0],
+    ['Wildcard',S.query&&S.query.includes('*')?1:0],
+    ['Sites',sites.size],
+    ['Unique Rows',hits.length],
+    ['Removed',0]
+  ];
+  return `<div class="android-metric-row">${metrics.map(([k,v])=>`<div class="android-metric"><div class="mv">${nfmt(v)}</div><div class="mk">${escHtml(k)}</div></div>`).join('')}</div>`;
+}
+function buildCopilotSummaryWeb(){
+  if(!S.sources.length) return 'AI COPILOT\\nImport CM/HW files first. Then Copilot will rank duplicate IPs, CM-without-HW, Multi-OSS, 4G/5G gaps and missing coordinates.';
+  const m=dashboardModel();
+  const lines=[];
+  lines.push('AI COPILOT — AUTOMATIC INSIGHTS');
+  lines.push('');
+  lines.push(`Loaded evidence: ${nfmt(m.totalRows)} rows, ${nfmt(S.sources.length)} source(s), ${nfmt(m.sites.ALL.size)} physical site(s).`);
+  lines.push('');
+  lines.push('Key findings');
+  lines.push(`• Duplicate M-Plane/O&M IP groups: ${nfmt(m.duplicateIp)}`);
+  lines.push(`• CM sites missing HW: ${nfmt(m.cmNoHw)}`);
+  lines.push(`• Multi-OSS sites: ${nfmt(m.multiOssCount)}`);
+  lines.push(`• Sites/rows missing coordinates: ${nfmt(m.coords.missing)}`);
+  lines.push(`• Embedded BSC O&M records: ${nfmt(BSC_CATALOG.length)}`);
+  lines.push(`• 2G TRX indicator: ${nfmt(m.bsc.totalTrx)}`);
+  lines.push('');
+  lines.push('Suggested next checks');
+  if(m.duplicateIp>0) lines.push('1. Run Q08 Duplicate M-Plane IPs and inspect affected sites with Site 360°.');
+  if(m.cmNoHw>0) lines.push('2. Run Q07 CM without HW and confirm whether HW dump is complete.');
+  if(m.multiOssCount>0) lines.push('3. Run Q10 Multi-OSS sites and validate OSS ownership.');
+  lines.push('4. Use BSC Intelligence for O&M IP / exchange / location validation.');
+  lines.push('');
+  lines.push('Confidence: High for calculated browser data; dependent on imported file coverage and Fast Preview vs Full Accurate mode.');
+  return lines.join('\\n');
+}
+function showAiCopilotDialog(){
+  const text=buildCopilotSummaryWeb();
+  openModal('AI Copilot — Automatic Insights', `<div class="result-block">${escHtml(text)}</div>`, `
+    <button class="btn btn-secondary" onclick="copyText(${JSON.stringify('')}.replace('', document.querySelector('#modalBody .result-block')?.innerText||''))">Copy</button>
+    <button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function showQuickAiDialog(){
+  const body=`<div class="quick-list">${QUERIES.map((q,i)=>`<div class="quick-item" onclick="closeModal();runQuery('${q.id}')"><b>Q${String(i+1).padStart(2,'0')}</b> — ${escHtml(q.title)}<br><span class="text-muted">${escHtml(q.desc||'Tap to run')}</span></div>`).join('')}</div>`;
+  openModal('Quick AI Q01–Q60',body,`<button class="btn btn-secondary" onclick="copyText(${JSON.stringify(QUERIES.map((q,i)=>`Q${String(i+1).padStart(2,'0')} — ${q.title}`).join('\\n'))})">Copy List</button><button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function showAskAiDialog(){switchTab('ai');setTimeout(()=>{const el=document.getElementById('aiInput');if(el)el.focus();},200);}
+function showHybridChatGptDialog(){
+  const prompt=buildChatGptPrompt('Summarize current Nokia OI dashboard and investigation priorities');
+  openModal('ChatGPT + Local DB',`<div class="result-block">${escHtml(prompt.slice(0,5000))}</div>`,`
+    <button class="btn btn-secondary" onclick="copyText(${JSON.stringify(prompt)})">Copy Context</button>
+    <button class="btn btn-secondary" onclick="openChatGpt()">Open ChatGPT</button>
+    <button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function showLoadedSourcesDialog(){
+  const body=S.sources.length?renderResultTable(S.sources.map(s=>({Source:s.name,Tech:s.tech,Rows:s.rows.length,Columns:s.headers.length,Mode:s.previewCap?'Fast Preview':'Loaded/Full'}))):'<div class="empty-state"><p>No sources loaded.</p></div>';
+  openModal('Loaded Sources',body,`<button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function showManageDataDialog(){
+  const body=`<div class="result-block">MANAGE DATA\\n\\nCurrent mode: ${S.importFull?'Full Accurate':'Fast Preview'}\\nSources: ${S.sources.length}\\nRows: ${nfmt(S.sources.reduce((a,s)=>a+s.rows.length,0))}\\n\\nUse Import tab to add/clear files. Fast Preview is recommended for iPhone speed; Full Accurate is recommended for final audit.</div>`;
+  openModal('Manage Data',body,`<button class="btn btn-secondary" onclick="closeModal();switchTab('import')">Open Import</button><button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function promptSite360(){
+  const body=`<input id="site360Input" class="modal-input" placeholder="Enter site/BSC, e.g. ZMM100 or KN2GB01" value="${escHtml(S.query||'')}"><div class="text-muted mt-2">Site 360 searches all loaded local CM/HW evidence and embedded BSC reference.</div>`;
+  openModal('Site 360° Drill-through',body,`<button class="btn btn-secondary" onclick="runSite360FromModal()">Open Site 360°</button><button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function runSite360FromModal(){
+  const q=document.getElementById('site360Input')?.value||'';
+  const ans=localSite360Answer(q)||offlineAiAnswer(q);
+  document.getElementById('modalTitle').textContent='Site 360° — '+q;
+  document.getElementById('modalBody').innerHTML=`<div class="result-block">${escHtml(ans)}</div>`;
+  document.getElementById('modalFooter').innerHTML=`<button class="btn btn-secondary" onclick="copyText(document.querySelector('#modalBody .result-block')?.innerText||'')">Copy</button><button class="btn btn-primary" onclick="closeModal()">Done</button>`;
+}
+function showSelfCheck(){
+  const checks=[
+    ['Version',NOI_VERSION],
+    ['Quick AI questions',QUERIES.length],
+    ['BSC embedded records',BSC_CATALOG.length],
+    ['Sources loaded',S.sources.length],
+    ['Rows loaded',S.sources.reduce((a,s)=>a+s.rows.length,0)],
+    ['Service Worker','serviceWorker' in navigator?'Supported':'Not supported'],
+    ['Offline AI','Enabled'],
+    ['ChatGPT context','Copy/Open supported'],
+    ['Dashboard parity','Android-style foundation enabled']
+  ];
+  openModal('Self Check',renderResultTable(checks.map(([Check,Value])=>({Check,Value}))),`<button class="btn btn-primary" onclick="closeModal()">Done</button>`);
+}
+function renderAnalyzeTab(){
+  const noSrc=!S.sources.length;
+  const m=noSrc?null:dashboardModel();
+  return `
+<div class="content">
+  ${renderWorkflowToolbar()}
+  ${renderFilterCard()}
+  <div class="android-status">Ready — ${noSrc?'import CM/HW CSV or ZIP files.':'analysis ready'} <span class="done-badge">v1.0.9</span></div>
+  <div class="android-copilot" onclick="showAiCopilotDialog()">AI COPILOT • ${noSrc?'Import and Analyze data first.':'Tap for full automatic insights: duplicate IP, CM-without-HW, Multi-OSS, 4G/5G gaps and BSC evidence.'}</div>
+  <div class="android-section">Executive Dashboard</div>
+  ${noSrc?'<div class="parity-note">Import Nokia CM/HW files to populate Android-style dashboard cards.</div>':renderDashboardCards()}
+  <div class="android-section">Interactive Analytics</div>
+  ${!noSrc?renderBarChart('Rows by Source',mapSourceRows()):''}
+  ${!noSrc?renderBarChart('Technology Coverage',mapTechSites(m.sites)):''}
+  <div class="android-section">Search Result Metrics</div>
+  ${renderMetricStrip()}
+  <div class="android-section">Quick AI Q01–Q60</div>
+  <div class="query-grid">
+    ${QUERIES.map((q,i)=>`
+    <div class="query-card${noSrc?' hidden':''}" onclick="runQuery('${q.id}')">
+      <div class="query-num">Q${String(i+1).padStart(2,'0')}</div>
+      <div class="query-title">${q.title}</div>
+      <div class="query-desc">${q.desc}</div>
+    </div>`).join('')}
+    ${noSrc?`
+    <div class="query-card" style="opacity:.55;cursor:default">
+      <div class="query-num">Q01–Q60</div>
+      <div class="query-title">60 Intelligence Questions</div>
+      <div class="query-desc">Import Nokia RAN CM/HW dumps to unlock dashboard, search, AI Copilot, Site 360 and BSC Intelligence.</div>
+    </div>`:''}
+  </div>
+</div>`;
+}
+// Extend offline AI with Android Copilot and dashboard intents.
+const offlineAiAnswer_v108 = offlineAiAnswer;
+offlineAiAnswer = function(q){
+  const t=String(q||'').toLowerCase();
+  if(t.includes('copilot') || t.includes('investigation') || t.includes('priority') || t.includes('risk')) return buildCopilotSummaryWeb();
+  if(t.includes('dashboard') || t.includes('executive summary')) {
+    if(!S.sources.length) return 'Dashboard is ready but no CM/HW source is loaded yet.';
+    const m=dashboardModel();
+    return `EXECUTIVE DASHBOARD\\n\\nPhysical Sites: ${nfmt(m.sites.ALL.size)}\\nCM Rows: ${nfmt(m.rows.CM)}\\nHW Rows: ${nfmt(m.rows.HW)}\\nTotal Rows: ${nfmt(m.totalRows)}\\nData Sources: ${nfmt(S.sources.length)}\\nBSC O&M Records: ${nfmt(BSC_CATALOG.length)}\\n2G Sites: ${nfmt(m.sites['2G'].size)}\\n4G Sites: ${nfmt(m.sites['4G'].size)}\\n5G Sites: ${nfmt(m.sites['5G'].size)}\\nCM no HW: ${nfmt(m.cmNoHw)}\\nMulti-OSS: ${nfmt(m.multiOssCount)}\\nDuplicate IP groups: ${nfmt(m.duplicateIp)}\\nSW versions: ${nfmt(m.swCount)}`;
+  }
+  return offlineAiAnswer_v108(q);
+};
+</script>
+
 </body>
 </html>

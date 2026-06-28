@@ -1,4 +1,4 @@
-# Nokia OI Safari Offline PWA
+# Nokia OI Safari Offline PWA v1.0.9
 
 Static GitHub Pages version.
 

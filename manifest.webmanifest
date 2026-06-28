@@ -1,8 +1,8 @@
 {
-  "name": "Nokia Operations Intelligence Safari Enhanced",
+  "name": "Nokia Operations Intelligence Safari",
   "short_name": "Nokia OI",
-  "description": "Offline-capable Nokia Operations Intelligence Safari PWA",
-  "start_url": "./index.html?v=108",
+  "description": "Offline-capable Nokia Operations Intelligence Safari PWA with Android-parity dashboard foundation",
+  "start_url": "./index.html?v=109",
   "scope": "./",
   "display": "standalone",
   "background_color": "#020817",
